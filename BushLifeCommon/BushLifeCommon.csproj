@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{824588FF-3222-40E2-8A7A-A98A982D3714}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AU.Com</RootNamespace>
+    <AssemblyName>BushLifeCommon</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>BushLifeCommon.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Gallio, Version=3.4.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL" />
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\SharedLibs\x64\Hibernate\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharedLibs\log4net\Release\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="MbUnit, Version=3.4.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL" />
+    <Reference Include="NHibernate">
+      <HintPath>..\SharedLibs\x64\Hibernate\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="PostSharp, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BushLife\AntColony\Ant.cs" />
+    <Compile Include="BushLife\AntColony\AntColonyContext.cs" />
+    <Compile Include="BushLife\AntColony\Colony.cs" />
+    <Compile Include="BushLife\AntColony\ForageMode.cs" />
+    <Compile Include="BushLife\AntColony\IAnt.cs" />
+    <Compile Include="BushLife\AntColony\IAntColonyContext.cs" />
+    <Compile Include="BushLife\AntColony\IEdge.cs" />
+    <Compile Include="BushLife\AntColony\INodePath.cs" />
+    <Compile Include="BushLife\AntColony\IPath.cs" />
+    <Compile Include="BushLife\AntColony\IPathPath.cs" />
+    <Compile Include="BushLife\AntColony\IPheremoneKey.cs" />
+    <Compile Include="BushLife\AntColony\IStep.cs" />
+    <Compile Include="BushLife\AntColony\NodeAnt.cs" />
+    <Compile Include="BushLife\AntColony\PathAnt.cs" />
+    <Compile Include="BushLife\AntColony\Pherenome.cs" />
+    <Compile Include="BushLife\Aspects\EntryNullArgumentCheckAspect.cs" />
+    <Compile Include="BushLife\Aspects\ExceptionHandlers\FormatExceptionAspect.cs" />
+    <Compile Include="BushLife\Aspects\ExceptionHandlers\InvalidOperationExceptionAspect.cs" />
+    <Compile Include="BushLife\Aspects\ExceptionHandlers\LogExceptionAttribute.cs" />
+    <Compile Include="BushLife\Aspects\ExceptionHandlers\ShowExceptionAttribute.cs" />
+    <Compile Include="BushLife\Aspects\ExitNullArgumentCheckAspect.cs" />
+    <Compile Include="BushLife\Aspects\GlobalAspects.cs" />
+    <Compile Include="BushLife\Aspects\Hibernate\HibernateTransactionAspect.cs" />
+    <Compile Include="BushLife\Aspects\Log4NetLoggerAspect.cs" />
+    <Compile Include="BushLife\Attributes\UpdateTrackerAttribute.cs" />
+    <Compile Include="BushLife\Attributes\UpdateTrackerCollectionAttribute.cs" />
+    <Compile Include="BushLife\Exceptions\SyntaxException.cs" />
+    <Compile Include="BushLife\Framework\Clone\IPolymorphicClone.cs" />
+    <Compile Include="BushLife\Framework\Expressions\ExpressionCompiler.cs" />
+    <Compile Include="BushLife\Framework\Expressions\ExpressionUtils.cs" />
+    <Compile Include="BushLife\Framework\Expressions\SwapVisitor.cs" />
+    <Compile Include="BushLife\Framework\Matrix\Matrix.cs" />
+    <Compile Include="BushLife\Framework\Matrix\MatrixKey.cs" />
+    <Compile Include="BushLife\Maths\TrigUtils.cs" />
+    <Compile Include="BushLife\Patterns\Troolean.cs" />
+    <Compile Include="BushLife\Persistence\IUpdaterTracking.cs" />
+    <Compile Include="BushLife\Aspects\NullArgumentCheckAspect.cs" />
+    <Compile Include="BushLife\Aspects\ProfilerAspect.cs" />
+    <Compile Include="BushLife\Aspects\TransactionScopeAspect.cs" />
+    <Compile Include="BushLife\Aspects\UpdateTrackerAspect.cs" />
+    <Compile Include="BushLife\Attributes\TransientAttribute.cs" />
+    <Compile Include="BushLife\Aspects\Authentication\AuthenticateAspect.cs" />
+    <Compile Include="BushLife\Aspects\Authentication\AuthenticationException.cs" />
+    <Compile Include="BushLife\Filters\ReflectionTypeFilters.cs" />
+    <Compile Include="BushLife\Framework\CloneFactory.cs" />
+    <Compile Include="BushLife\Framework\Collections\Generic\TypeNameComparer.cs" />
+    <Compile Include="BushLife\Framework\ComponentModel\BindingListEnhanced.cs" />
+    <Compile Include="BushLife\Framework\Expressions\PredicateBuilder.cs" />
+    <Compile Include="BushLife\Patterns\AbstractFactory.cs" />
+    <Compile Include="BushLife\Patterns\ChainOfCommand.cs" />
+    <Compile Include="BushLife\Patterns\ICommand.cs" />
+    <Compile Include="BushLife\Patterns\ICommandContext.cs" />
+    <Compile Include="BushLife\Patterns\ILockingMechanism.cs" />
+    <Compile Include="BushLife\Persistence\GuidID.cs" />
+    <Compile Include="BushLife\Persistence\GuidIDInterface.cs" />
+    <Compile Include="BushLife\Persistence\Hibernate\GenericDAOInterface.cs" />
+    <Compile Include="BushLife\Persistence\Hibernate\HibernateDAO.cs" />
+    <Compile Include="BushLife\Persistence\Hibernate\HibernateSessionFactory.cs" />
+    <Compile Include="BushLife\Persistence\Hibernate\IHibernateConfigurationExtension.cs" />
+    <Compile Include="BushLife\Persistence\PriorityOrderedItem.cs" />
+    <Compile Include="BushLife\Persistence\PropertyKey.cs" />
+    <Compile Include="BushLife\Persistence\PropertyKeyInterface.cs" />
+    <Compile Include="BushLife\Framework\Collections\Generic\PropertyComparer.cs" />
+    <Compile Include="BushLife\Framework\ComponentModel\SortableBindingList.cs" />
+    <Compile Include="BushLife\Spatial\ThreeD\Line3D.cs" />
+    <Compile Include="BushLife\Spatial\ThreeD\Point3D.cs" />
+    <Compile Include="BushLife\Spatial\TwoD\Circle.cs" />
+    <Compile Include="BushLife\Spatial\TwoD\EmptyLocus.cs" />
+    <Compile Include="BushLife\Spatial\TwoD\Line2D.cs" />
+    <Compile Include="BushLife\Spatial\TwoD\LineSegmentLocus.cs" />
+    <Compile Include="BushLife\Spatial\TwoD\Locus.cs" />
+    <Compile Include="BushLife\Spatial\TwoD\MultiPointLocus.cs" />
+    <Compile Include="BushLife\Spatial\TwoD\Point2D.cs" />
+    <Compile Include="BushLife\Spatial\TwoD\PointLocus.cs" />
+    <Compile Include="BushLife\Spatial\TwoD\Rectangle.cs" />
+    <Compile Include="BushLife\Utils\AssemblyUtils.cs" />
+    <Compile Include="BushLife\Utils\BindingListUtils.cs" />
+    <Compile Include="BushLife\Utils\ComboBoxLoader.cs" />
+    <Compile Include="BushLife\Utils\EnumUtils.cs" />
+    <Compile Include="BushLife\Utils\GenericUtils.cs" />
+    <Compile Include="BushLife\Utils\Indexer.cs" />
+    <Compile Include="BushLife\Utils\LanguageUtils.cs" />
+    <Compile Include="BushLife\Utils\MathsUtils.cs" />
+    <Compile Include="BushLife\Utils\ReflectionUtils.cs" />
+    <Compile Include="BushLife\Utils\StreamUtils.cs" />
+    <Compile Include="BushLife\Utils\StringUtils.cs" />
+    <Compile Include="BushLife\Utils\WinUtils.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="BushLifeCommon.pfx" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
