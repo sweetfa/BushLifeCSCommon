@@ -37,7 +37,6 @@
     <AssemblyOriginatorKeyFile>BushLifeCommon.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Gallio, Version=3.4.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL" />
     <Reference Include="Iesi.Collections">
       <HintPath>..\SharedLibs\x64\Hibernate\Iesi.Collections.dll</HintPath>
     </Reference>
@@ -45,7 +44,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SharedLibs\log4net\Release\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="MbUnit, Version=3.4.0.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL" />
     <Reference Include="NHibernate">
       <HintPath>..\SharedLibs\x64\Hibernate\NHibernate.dll</HintPath>
     </Reference>
