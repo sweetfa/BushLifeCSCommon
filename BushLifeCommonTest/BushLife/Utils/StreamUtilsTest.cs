@@ -140,13 +140,22 @@ namespace AU.Com.BushLife.Utils
 		[Test]
 		public void TestFileIO()
 		{
+			bool directoryCreated = false;
 			SaveFileDialog dialog = new SaveFileDialog();
-			dialog.FileName = "C:\\Temp\\TestFile.hex";
+			dialog.FileName = @"C:\Temp\TestFile.hex";
+			string directoryPath = Path.GetDirectoryName(dialog.FileName);
+			if (!Directory.Exists(directoryPath))
+			{
+				Directory.CreateDirectory(directoryPath);
+				directoryCreated = true;
+			}
 			using (Stream fs = dialog.OpenFile())
 			{
 				UInt16 value = 0xC7C7;
 				fs.Write(BitConverter.GetBytes(value), 0, 2);
 			}
+			if (directoryCreated)
+				Directory.Delete(directoryPath, true);
 		}
 
 	}
