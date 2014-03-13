@@ -29,8 +29,10 @@ using PostSharp.Aspects.Dependencies;
 namespace AU.Com.BushLife.Aspects
 {
     /// <summary>
-    /// Aspect to profile method execution with output directed
-    /// to debug console.
+    /// Aspect to profile method execution with output directed to log4net
+	/// if the debug level is set to INFO for the logger
+	/// <para>Note the logger is the logger for the method that is wrapped,
+	/// not this class</para>
     /// <para>To use: add "[assembly: ProfilerAspect()]" to AssemblyInfo.cs </para>
     /// </summary>
     [Serializable]
