@@ -39,12 +39,30 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 		/// </summary>
 		public bool IgnoreAndContinue { get; set; }
 
+		/// <summary>
+		/// If set the type of exception that this logger will work for
+		/// <para>Add multiple advices for multiple exception types or leave null for any exception type</para>
+		/// </summary>
+		public Type ExceptionType { get; set; }
+
 		private ILog Logger { get; set; }
 
 		public override void RuntimeInitialize(System.Reflection.MethodBase method)
 		{
 			base.RuntimeInitialize(method);
 			Logger = LogManager.GetLogger(method.DeclaringType.Assembly, method.DeclaringType);
+		}
+
+		/// <summary>
+		/// Set the exception type to use for this aspect advice
+		/// </summary>
+		/// <param name="targetMethod"></param>
+		/// <returns></returns>
+		public override Type GetExceptionType(System.Reflection.MethodBase targetMethod)
+		{
+			if (ExceptionType != null)
+				return ExceptionType;
+			return base.GetExceptionType(targetMethod);
 		}
 
 		/// <summary>
