@@ -44,6 +44,11 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 		public string Message { get; set; }
 
 		/// <summary>
+		/// If flag is set to true the details of the exception are added to the message
+		/// </summary>
+		public bool ShowExceptionDetail { get; set; }
+
+		/// <summary>
 		/// Ensure the required properties are provided at compile time
 		/// </summary>
 		/// <param name="method"></param>
@@ -58,10 +63,13 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 
 		public override void OnException(MethodExecutionArgs args)
 		{
+			string message = Message;
+			if (ShowExceptionDetail)
+				message = string.Format("{0}\n\n{1}\n{2}", Message, args.Exception.GetType().FullName, args.Exception.Message);
 			if (Caption == null)
-				MessageBox.Show(Message);
+				MessageBox.Show(message);
 			else
-				MessageBox.Show(Message, Caption);
+				MessageBox.Show(message, Caption);
 			base.OnException(args);
 		}
 	}
