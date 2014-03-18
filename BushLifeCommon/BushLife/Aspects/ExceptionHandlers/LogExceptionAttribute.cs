@@ -31,7 +31,7 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 	[Serializable]
 	[ProvideAspectRole(StandardRoles.ExceptionHandling)]
 	[LogExceptionAttribute(AttributeExclude = true)]
-	public class LogExceptionAttribute : OnExceptionAspect
+	public sealed class LogExceptionAttribute : OnExceptionAspect
 	{
 		/// <summary>
 		/// If flag is true just log the error and continue on.

@@ -76,6 +76,7 @@
     <Compile Include="BushLife\AntColony\NodeAnt.cs" />
     <Compile Include="BushLife\AntColony\PathAnt.cs" />
     <Compile Include="BushLife\AntColony\Pherenome.cs" />
+    <Compile Include="BushLife\Aspects\ChangeCursorAttribute.cs" />
     <Compile Include="BushLife\Aspects\EntryNullArgumentCheckAspect.cs" />
     <Compile Include="BushLife\Aspects\ExceptionHandlers\FormatExceptionAspect.cs" />
     <Compile Include="BushLife\Aspects\ExceptionHandlers\InvalidOperationExceptionAspect.cs" />

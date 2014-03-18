@@ -31,7 +31,7 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 	[Serializable]
 	[ProvideAspectRole(StandardRoles.ExceptionHandling)]
 	[ShowExceptionAttribute(AttributeExclude = true)]
-	public class ShowExceptionAttribute : OnExceptionAspect
+	public sealed class ShowExceptionAttribute : OnExceptionAspect
 	{
 		/// <summary>
 		/// The caption on the message box.  If this value is null no caption is displayed
