@@ -72,6 +72,9 @@
     <Compile Include="BushLife\AntColony\PathTravellingSalesmanEdge.cs" />
     <Compile Include="BushLife\AntColony\PathTravellingSalesmanPath.cs" />
     <Compile Include="BushLife\AntColony\PathTravellingSalesmanStep.cs" />
+    <Compile Include="BushLife\Aspects\ChangeCursorAttributeTest.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="BushLife\Aspects\EntryNullArgumentAspectTest.cs" />
     <Compile Include="BushLife\Aspects\ExceptionHandlers\InvalidOperationExceptionAspectTest.cs" />
     <Compile Include="BushLife\Aspects\ExitNullArgumentAspectTest.cs" />
@@ -97,6 +100,7 @@
   <ItemGroup>
     <None Include="BushLifeCommonTest.dll.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <Content Include="log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
