@@ -81,7 +81,7 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 		{
 			base.OnException(args);
 			string message;
-			if (IgnoreArguments == false)
+			if (IgnoreArguments == false && args.Arguments != null)
 				message = string.Format("{0}({1})", Message, string.Join(", ", args.Arguments.Select(a => a == null ? "null" : a.ToString())));
 			else
 				message = Message;
