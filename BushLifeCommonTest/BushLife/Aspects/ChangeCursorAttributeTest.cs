@@ -31,9 +31,11 @@ namespace AU.Com.BushLife.Aspects
 	}
 
 	[TestFixture]
+	[Isolated]
 	public class ChangeCursorAttributeTest
 	{
 		[Test]
+		[Isolated]
 		public void ChangeCursorAttributeTest1()
 		{
 			#region Setup Test Data
@@ -54,6 +56,7 @@ namespace AU.Com.BushLife.Aspects
 		}
 
 		[Test]
+		[Isolated]
 		public void ChangeCursorAttributeTest2()
 		{
 			#region Setup Test Data

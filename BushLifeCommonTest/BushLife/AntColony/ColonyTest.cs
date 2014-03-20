@@ -15,6 +15,7 @@ using AU.Com.BushLife.Utils;
 namespace AU.Com.BushLife.AntColony
 {
 	[TestFixture]
+	[Isolated]
 	public class ColonyTest
 	{
 		private PathTravellingSalesmanStep Adelaide;
@@ -203,6 +204,7 @@ namespace AU.Com.BushLife.AntColony
 
 		[Test]
 		[Factory("PathColonyTestData")]
+		[Isolated]
         [Disable("Initialise Pheremones not set up properly")]
 		public void AntColonyPathAntTest(Int32 numberOfAnts, Int32 numberOfIterations, decimal initialPheremone, decimal evaporationRate,
 			IPathPath path,
@@ -267,6 +269,7 @@ namespace AU.Com.BushLife.AntColony
 
 		[Test]
 		[Factory("NodeColonyTestData")]
+		[Isolated]
 		[Disable("The mechanism for this mode not yet sorted")]
 		public void AntColonyNodeAntTest(Int32 numberOfAnts, Int32 numberOfIterations, decimal initialPheremone, decimal evaporationRate,
 			INodePath path,
