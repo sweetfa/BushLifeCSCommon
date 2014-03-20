@@ -46,8 +46,10 @@ namespace AU.Com.BushLife.Aspects
 			#endregion
 
 			#region Validate Results
-			Isolate.Verify.WasCalledWithExactArguments(() => cut.Cursor = Cursors.WaitCursor);
-			Isolate.Verify.WasCalledWithExactArguments(() => cut.Cursor = Cursors.Default);
+			Cursor waitCursor = Cursors.WaitCursor;
+			Cursor defaultCursor = Cursors.Default;
+			Isolate.Verify.WasCalledWithExactArguments(() => cut.Cursor = waitCursor);
+			Isolate.Verify.WasCalledWithExactArguments(() => cut.Cursor = defaultCursor);
 			#endregion
 		}
 
@@ -63,8 +65,10 @@ namespace AU.Com.BushLife.Aspects
 			#endregion
 
 			#region Validate Results
-			Isolate.Verify.WasCalledWithExactArguments(() => cut.Cursor = Cursors.WaitCursor);
-			Isolate.Verify.WasCalledWithExactArguments(() => cut.Cursor = Cursors.Default);
+			Cursor waitCursor = Cursors.WaitCursor;
+			Cursor defaultCursor = Cursors.Default;
+			Isolate.Verify.WasCalledWithExactArguments(() => cut.Cursor = waitCursor);
+			Isolate.Verify.WasCalledWithExactArguments(() => cut.Cursor = defaultCursor);
 			#endregion
 		}
 	}
