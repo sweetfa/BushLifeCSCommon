@@ -25,6 +25,8 @@ using PostSharp.Aspects;
 using PostSharp.Aspects.Dependencies;
 using PostSharp.Extensibility;
 
+using AU.Com.BushLife.Exceptions;
+
 namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 {
 	/// <summary>
@@ -76,31 +78,43 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 
 		public override void OnException(MethodExecutionArgs args)
 		{
-			string message = Message;
-			if (ShowExceptionDetail)
-				message = string.Format("{0}\n\n{1}\n{2}", Message, args.Exception.GetType().FullName, args.Exception.Message);
-
-			// Get the parent window if available
-			DependencyObject dependencyObject = args.Instance as DependencyObject;
-			Window window = null;
-			if (dependencyObject != null)
-				window = Window.GetWindow(dependencyObject);
-
-			if (window != null)
+			if ((SpecificExceptionType == null && !args.Exception.IsAlreadyHandled(this.GetType()))
+				|| (SpecificExceptionType != null && args.Exception.GetType().Equals(SpecificExceptionType)))
 			{
-				if (Caption != null)
-					System.Windows.MessageBox.Show(window, Message, Caption, MessageBoxButton.OK, MessageBoxImage.Error);
+				string message = Message;
+				if (ShowExceptionDetail)
+					message = string.Format("{0}\n\n{1}\n{2}", Message, args.Exception.GetType().FullName, args.Exception.Message);
+
+				// Get the parent window if available
+				DependencyObject dependencyObject = args.Instance as DependencyObject;
+				Window window = null;
+				if (dependencyObject != null)
+					window = Window.GetWindow(dependencyObject);
+
+				if (window != null)
+				{
+					if (Caption != null)
+						System.Windows.MessageBox.Show(window, Message, Caption, MessageBoxButton.OK, MessageBoxImage.Error);
+					else
+						System.Windows.MessageBox.Show(window, Message, window.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+				}
 				else
-					System.Windows.MessageBox.Show(window, Message, window.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+				{
+					if (Caption != null)
+						System.Windows.MessageBox.Show(message, Caption, MessageBoxButton.OK, MessageBoxImage.Error);
+					else
+						System.Windows.MessageBox.Show(message, "Exception Occurred", MessageBoxButton.OK, MessageBoxImage.Error);
+				}
+			}
+			if (SpecificExceptionType != null && !args.Exception.IsAlreadyHandled(this.GetType()))
+			{
+				args.Exception = new AlreadyHandledException(this.GetType(), args.Exception);
+				args.FlowBehavior = FlowBehavior.ThrowException;
 			}
 			else
-			{
-				if (Caption != null)
-					System.Windows.MessageBox.Show(message, Caption, MessageBoxButton.OK, MessageBoxImage.Error);
-				else
-					System.Windows.MessageBox.Show(message, "Exception Occurred", MessageBoxButton.OK, MessageBoxImage.Error);
-			}
+				args.FlowBehavior = FlowBehavior.Default;
 			base.OnException(args);
 		}
+
 	}
 }

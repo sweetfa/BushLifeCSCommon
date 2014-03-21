@@ -12,6 +12,7 @@ using TypeMock.ArrangeActAssert;
 
 using log4net;
 using AU.Com.BushLife.Utils;
+using AU.Com.BushLife.Exceptions;
 
 namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 {
@@ -41,7 +42,7 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 				TestClass cut = new TestClass();
 				cut.MyMethod1();
 			}
-			catch (ArgumentException)
+			catch (AlreadyHandledException)
 			{
 			}
 			#endregion
@@ -72,7 +73,7 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 				TestClass cut = new TestClass();
 				cut.MyMethod2();
 			}
-			catch (ArgumentException)
+			catch (AlreadyHandledException)
 			{
 			}
 			#endregion
@@ -143,6 +144,69 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 
 			#region Verity results
 			Isolate.Verify.WasNotCalled(() => System.Windows.MessageBox.Show(message, caption, button, image));
+			#endregion
+		}
+
+		[Test]
+		[Isolated]
+		public void ShowExceptionTestSpecificException5()
+		{
+			#region Set up test data
+			string message = "Hello dolly 4";
+			string caption = "Exception Occurred";
+			MessageBoxButton button = MessageBoxButton.OK;
+			MessageBoxImage image = MessageBoxImage.Error;
+
+			Isolate.Fake.StaticMethods<Window>(Members.MustSpecifyReturnValues);
+			Isolate.Fake.StaticMethods<System.Windows.MessageBox>(Members.ReturnRecursiveFakes);
+			//Isolate.WhenCalled(() => System.Windows.MessageBox.Show((string)null, (string)null, MessageBoxButton.OK, MessageBoxImage.Error)).DoInstead((c) => DumpMessage(c, new object[] { message, caption, button, image }));
+			#endregion
+
+			#region Execute test
+			try
+			{
+				TestClass cut = new TestClass();
+				cut.MyMethod7();
+			}
+			catch (AlreadyHandledException)
+			{
+			}
+			#endregion
+
+			#region Verity results
+			Isolate.Verify.WasCalledWithExactArguments(() => System.Windows.MessageBox.Show(message, caption, button, image));
+			#endregion
+		}
+
+		[Test]
+		[Isolated]
+		[ExpectedArgumentException]
+		public void ShowExceptionTestSpecificException6()
+		{
+			#region Set up test data
+			string message = "Hello dolly\n\nSystem.ArgumentException\nValue cannot be null.\r\nParameter name: Something is wrong as well";
+			string caption = "Exception Occurred";
+			MessageBoxButton button = MessageBoxButton.OK;
+			MessageBoxImage image = MessageBoxImage.Error;
+
+			Isolate.Fake.StaticMethods<Window>(Members.MustSpecifyReturnValues);
+			Isolate.Fake.StaticMethods<System.Windows.MessageBox>(Members.ReturnRecursiveFakes);
+			//Isolate.WhenCalled(() => System.Windows.MessageBox.Show((string)null, (string)null, MessageBoxButton.OK, MessageBoxImage.Error)).DoInstead((c) => DumpMessage(c, new object[] { message, caption, button, image }));
+			#endregion
+
+			#region Execute test
+			try
+			{
+				TestClass cut = new TestClass();
+				cut.MyMethod8();
+			}
+			catch (AlreadyHandledException)
+			{
+			}
+			#endregion
+
+			#region Verity results
+			Isolate.Verify.WasCalledWithExactArguments(() => System.Windows.MessageBox.Show(message, caption, button, image));
 			#endregion
 		}
 
@@ -277,6 +341,20 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 		public bool MyMethod6()
 		{
 			throw new ArgumentNullException("Something is wrong as well");
+		}
+
+		[ShowException(Message = "Hello dolly 3", SpecificExceptionType = typeof(System.ArgumentNullException), ShowExceptionDetail = false, AspectPriority = 5)]
+		[ShowException(Message = "Hello dolly 4", ShowExceptionDetail = false, AspectPriority = 6)]
+		public bool MyMethod7()
+		{
+			throw new ArgumentNullException("Something is wrong as well");
+		}
+
+		[ShowException(Message = "Hello dolly 3", SpecificExceptionType = typeof(System.ArgumentNullException), ShowExceptionDetail = false, AspectPriority = 5)]
+		[ShowException(Message = "Hello dolly 4", ShowExceptionDetail = false, AspectPriority = 6)]
+		public bool MyMethod8()
+		{
+			throw new ArgumentException("Something is wrong as well");
 		}
 	}
 

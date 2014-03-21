@@ -23,6 +23,8 @@ using PostSharp.Aspects.Dependencies;
 
 using log4net;
 
+using AU.Com.BushLife.Exceptions;
+
 namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 {
 	/// <summary>
@@ -75,17 +77,25 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 			base.OnException(args);
 			if (Logger.IsErrorEnabled)
 			{
-				string message = args.Exception.Message;
-				Exception exception = args.Exception;
-				while (exception.InnerException != null)
+				if (args.Exception.IsAlreadyHandled(this.GetType()))
 				{
-					message += "\n" + exception.Message;
-					exception = exception.InnerException;
+					string message = "\n" + args.Exception.Message;
+					Exception exception = args.Exception;
+					while (exception.InnerException != null)
+					{
+						message += "\n" + exception.Message;
+						exception = exception.InnerException;
+					}
+					Logger.Error(message, exception);
 				}
-				Logger.Error(message, exception);
 			}
 			if (IgnoreAndContinue)
 				args.FlowBehavior = FlowBehavior.Continue;
+			else if (ExceptionType != null && !args.Exception.IsAlreadyHandled(this.GetType()))
+			{
+				args.Exception = new AlreadyHandledException(this.GetType(), args.Exception);
+				args.FlowBehavior = FlowBehavior.ThrowException;
+			}
 			else
 				args.FlowBehavior = FlowBehavior.Default;
 		}

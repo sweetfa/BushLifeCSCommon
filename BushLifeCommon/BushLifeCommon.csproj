@@ -82,6 +82,7 @@
     <Compile Include="BushLife\AntColony\Pherenome.cs" />
     <Compile Include="BushLife\Aspects\ChangeCursorAttribute.cs" />
     <Compile Include="BushLife\Aspects\EntryNullArgumentCheckAspect.cs" />
+    <Compile Include="BushLife\Aspects\ExceptionHandlers\ExceptionAspectUtils.cs" />
     <Compile Include="BushLife\Aspects\ExceptionHandlers\FormatExceptionAspect.cs" />
     <Compile Include="BushLife\Aspects\ExceptionHandlers\InvalidOperationExceptionAspect.cs" />
     <Compile Include="BushLife\Aspects\ExceptionHandlers\LogExceptionAttribute.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="BushLife\Aspects\Log4NetLoggerAspect.cs" />
     <Compile Include="BushLife\Attributes\UpdateTrackerAttribute.cs" />
     <Compile Include="BushLife\Attributes\UpdateTrackerCollectionAttribute.cs" />
+    <Compile Include="BushLife\Exceptions\AlreadyHandledException.cs" />
     <Compile Include="BushLife\Exceptions\SyntaxException.cs" />
     <Compile Include="BushLife\Framework\Clone\IPolymorphicClone.cs" />
     <Compile Include="BushLife\Framework\Expressions\ExpressionCompiler.cs" />
