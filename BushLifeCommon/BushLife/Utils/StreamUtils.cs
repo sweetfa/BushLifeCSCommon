@@ -45,12 +45,14 @@ namespace AU.Com.BushLife.Utils
         }
 
         #region Conversion Functions
-        /**
-         * Convert a byte array to an ascii string
-         * Note that we deal with it as if it is a
-         * C style string with a null terminating 
-         * character at the end.
-         */
+
+        /// <summary>
+        /// Convert a byte array to an ascii string
+		/// <para>Note that we deal with it as if it is a C style string with a null terminating character at the end.</para>
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="maxStringLen"></param>
+        /// <returns></returns>
         public string ConvertToString(byte[] source, int maxStringLen)
         {
             char[] chars = ConvertToCharArray(source);
@@ -72,12 +74,22 @@ namespace AU.Com.BushLife.Utils
             return result;
         }
 
+		/// <summary>
+		/// Convert a string to bytes
+		/// </summary>
+		/// <param name="source"></param>
+		/// <returns></returns>
         public byte[] ConvertToBytes(string source)
         {
             return encoding.GetBytes(source);
         }
 
 
+		/// <summary>
+		/// Convert a byte array to a char array using the current encoding
+		/// </summary>
+		/// <param name="source"></param>
+		/// <returns></returns>
         public char[] ConvertToCharArray(byte[] source)
         {
             return encoding.GetChars(source);

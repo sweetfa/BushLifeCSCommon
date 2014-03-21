@@ -10,26 +10,6 @@ using TypeMock.ArrangeActAssert;
 
 namespace AU.Com.BushLife.Aspects
 {
-	public static class ExtensionClass
-	{
-		[ChangeCursor(CursorPropertyName = "Cursor", NewCursorTypeName = "WaitCursor")]
-		public static bool ExtensionMethod(this TestClass myclass)
-		{
-			return false;
-		}
-	}
-
-	public class TestClass : Form
-	{
-		public Cursor Cursor { get; set; }
-
-		[ChangeCursor(CursorPropertyName = "Cursor", NewCursorTypeName = "WaitCursor")]
-		public bool MyMethod()
-		{
-			return false;
-		}
-	}
-
 	[TestFixture]
 	[Isolated]
 	public class ChangeCursorAttributeTest
@@ -75,4 +55,23 @@ namespace AU.Com.BushLife.Aspects
 			#endregion
 		}
 	}
+
+	public static class ExtensionClass
+	{
+		[ChangeCursor(CursorPropertyName = "Cursor", NewCursorTypeName = "WaitCursor")]
+		public static bool ExtensionMethod(this TestClass myclass)
+		{
+			return false;
+		}
+	}
+
+	public class TestClass : Form
+	{
+		[ChangeCursor(CursorPropertyName = "Cursor", NewCursorTypeName = "WaitCursor")]
+		public bool MyMethod()
+		{
+			return false;
+		}
+	}
+
 }

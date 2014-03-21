@@ -44,7 +44,7 @@ namespace AU.Com.BushLife.Aspects
             {
                 cut.Method4();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
 		}
