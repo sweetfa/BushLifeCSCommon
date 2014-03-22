@@ -77,7 +77,7 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 			base.OnException(args);
 			if (Logger.IsErrorEnabled)
 			{
-				if (args.Exception.IsAlreadyHandled(this.GetType()))
+				if (!args.Exception.IsAlreadyHandled(this.GetType()))
 				{
 					string message = "\n" + args.Exception.Message;
 					Exception exception = args.Exception;
