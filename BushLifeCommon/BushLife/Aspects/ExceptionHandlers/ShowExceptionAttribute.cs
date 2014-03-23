@@ -53,6 +53,13 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 		public bool ShowExceptionDetail { get; set; }
 
 		/// <summary>
+		/// Flag indicating if this attribute is an exclusion attribute.
+		/// <para>No message will be shown for the specific exception if this attribute is true</para>
+		/// <para>If this value is set requires a SpecificExceptionType to also be set</para>
+		/// </summary>
+		public bool ExcludeMessageShow { get; set; }
+
+		/// <summary>
 		/// If this value is set only trigger this advice on the specific exception type
 		/// </summary>
 		public Type SpecificExceptionType { get; set; }
@@ -64,8 +71,16 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 		/// <returns></returns>
 		public override bool CompileTimeValidate(MethodBase method)
 		{
-			if (Message == null)
-				throw new InvalidAnnotationException(string.Format("Message property is not defined and must be defined: {0}.{1}()", method.ReflectedType.FullName, method.Name));
+			if (ExcludeMessageShow)
+			{
+				if (SpecificExceptionType == null)
+					throw new InvalidAnnotationException(string.Format("A specific exception must be defined when ExcludeMessageShow == true: {0}.{1}()", method.ReflectedType.FullName, method.Name));
+			}
+			else
+			{
+				if (Message == null)
+					throw new InvalidAnnotationException(string.Format("Message property is not defined and must be defined: {0}.{1}()", method.ReflectedType.FullName, method.Name));
+			}
 			return base.CompileTimeValidate(method);
 		}
 
@@ -81,29 +96,32 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 			if ((SpecificExceptionType == null && !args.Exception.IsAlreadyHandled(this.GetType()))
 				|| (SpecificExceptionType != null && args.Exception.GetType().Equals(SpecificExceptionType)))
 			{
-				string message = Message;
-				if (ShowExceptionDetail)
-					message = string.Format("{0}\n\n{1}\n{2}", Message, args.Exception.GetType().FullName, args.Exception.Message);
-
-				// Get the parent window if available
-				DependencyObject dependencyObject = args.Instance as DependencyObject;
-				Window window = null;
-				if (dependencyObject != null)
-					window = Window.GetWindow(dependencyObject);
-
-				if (window != null)
+				if (!ExcludeMessageShow)
 				{
-					if (Caption != null)
-						System.Windows.MessageBox.Show(window, Message, Caption, MessageBoxButton.OK, MessageBoxImage.Error);
+					string message = Message;
+					if (ShowExceptionDetail)
+						message = string.Format("{0}\n\n{1}\n{2}", Message, args.Exception.GetType().FullName, args.Exception.Message);
+
+					// Get the parent window if available
+					DependencyObject dependencyObject = args.Instance as DependencyObject;
+					Window window = null;
+					if (dependencyObject != null)
+						window = Window.GetWindow(dependencyObject);
+
+					if (window != null)
+					{
+						if (Caption != null)
+							System.Windows.MessageBox.Show(window, Message, Caption, MessageBoxButton.OK, MessageBoxImage.Error);
+						else
+							System.Windows.MessageBox.Show(window, Message, window.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+					}
 					else
-						System.Windows.MessageBox.Show(window, Message, window.Name, MessageBoxButton.OK, MessageBoxImage.Error);
-				}
-				else
-				{
-					if (Caption != null)
-						System.Windows.MessageBox.Show(message, Caption, MessageBoxButton.OK, MessageBoxImage.Error);
-					else
-						System.Windows.MessageBox.Show(message, "Exception Occurred", MessageBoxButton.OK, MessageBoxImage.Error);
+					{
+						if (Caption != null)
+							System.Windows.MessageBox.Show(message, Caption, MessageBoxButton.OK, MessageBoxImage.Error);
+						else
+							System.Windows.MessageBox.Show(message, "Exception Occurred", MessageBoxButton.OK, MessageBoxImage.Error);
+					}
 				}
 			}
 			if (SpecificExceptionType != null && !args.Exception.IsAlreadyHandled(this.GetType()))
