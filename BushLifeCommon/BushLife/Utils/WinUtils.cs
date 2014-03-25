@@ -317,12 +317,30 @@ namespace AU.Com.BushLife.Utils
 			return principal;
 		}
 
+		/// <summary>
+		/// Get the name of the current user in the form DOMAINNAME\UserName
+		/// </summary>
+		/// <returns></returns>
 		public static string GetCurrentUserName()
 		{
 			IPrincipal principal = GetPrincipal();
 			IIdentity identity = principal.Identity;
 			return identity.Name;
 		}
+
+		/// <summary>
+		/// Get the name of the current windows user
+		/// without the domain component
+		/// </summary>
+		/// <returns></returns>
+		public static string GetCurrentUserNameWithoutDomain()
+		{
+			string[] parts = GetCurrentUserName().Split('\\');
+			if (parts.Length > 1)
+				return parts[1];
+			return parts[0];
+		}
+
 		#endregion
 
 		#region Authorisation
