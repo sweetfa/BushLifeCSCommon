@@ -179,5 +179,36 @@ namespace AU.Com.BushLife.Utils
 				return dt;
 			}
 		}
-	}
+
+        /// <summary>
+        /// Output a list embedded resources in the specified assembly
+        /// <para>The list is output to the provided stream</para>
+        /// </summary>
+        /// <param name="assembly">The assembly that the embedded resources are contained in</param>
+        /// <param name="stream">The stream to output the list to</param>
+        public static void ListResources(this Assembly assembly, System.IO.StreamWriter stream)
+        {
+            foreach (var resourceName in assembly.GetManifestResourceNames())
+            {
+                stream.WriteLine(resourceName);
+            }
+        }
+
+        /// <summary>
+        /// Extract an embedded resource from an assembly and save it to the specified path
+        /// </summary>
+        /// <param name="assembly">The assembly to extract the resource from</param>
+        /// <param name="resourceName">The name of the embedded resource to extract</param>
+        /// <param name="fileName">The path name of the file to create the embedded resource as</param>
+        public static void WriteResourceToFile(this Assembly assembly, string resourceName, string fileName)
+        {
+            using (var resource = assembly.GetManifestResourceStream(resourceName))
+            {
+                using (var file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+                {
+                    resource.CopyTo(file);
+                }
+            }
+        }
+    }
 }
