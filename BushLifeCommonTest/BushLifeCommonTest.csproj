@@ -94,6 +94,7 @@
     <Compile Include="BushLife\Spatial\TwoD\LineTest.cs" />
     <Compile Include="BushLife\Spatial\TwoD\PointTest.cs" />
     <Compile Include="BushLife\Spatial\TwoD\RectangleTest.cs" />
+    <Compile Include="BushLife\Utils\AssemblyUtilsTest.cs" />
     <Compile Include="BushLife\Utils\EnumUtilsTest.cs" />
     <Compile Include="BushLife\Utils\StreamUtilsTest.cs" />
     <Compile Include="BushLife\Utils\WinUtilsTest.cs" />

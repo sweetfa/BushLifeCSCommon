@@ -108,7 +108,7 @@ namespace AU.Com.BushLife.Utils
 		}
 
 		/// <summary>
-		/// Find the assembly of a particular name
+		/// Find the assembly of a particular name that is loaded in the current domain
 		/// </summary>
 		/// <param name="name">The full name of the assembly to match against</param>
 		/// <returns>The assembly with the matching name or null if the name is not matched</returns>
@@ -200,7 +200,7 @@ namespace AU.Com.BushLife.Utils
         /// <param name="assembly">The assembly to extract the resource from</param>
         /// <param name="resourceName">The name of the embedded resource to extract</param>
         /// <param name="fileName">The path name of the file to create the embedded resource as</param>
-        public static void WriteResourceToFile(this Assembly assembly, string resourceName, string fileName)
+        public static void ExtractResourceToFile(this Assembly assembly, string resourceName, string fileName)
         {
             using (var resource = assembly.GetManifestResourceStream(resourceName))
             {
