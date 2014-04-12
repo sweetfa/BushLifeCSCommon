@@ -18,11 +18,6 @@ namespace AU.Com.BushLife.Utils
         public void ListResourcesTest()
         {
             Assembly assembly = Assembly.LoadFrom(@"C:\Users\Frank Adcock\AppData\Local\NOES.exe");
-            //StreamWriter writer = new StreamWriter(Console.OpenStandardOutput());
-            //writer.AutoFlush = true;
-            //Console.SetOut(writer);
-            //assembly.ListResources(writer);
-
             assembly.GetManifestResourceNames().ForEach(n => Console.WriteLine(n));
         }
 

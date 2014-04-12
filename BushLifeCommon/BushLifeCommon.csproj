@@ -96,6 +96,7 @@
     <Compile Include="BushLife\Exceptions\AlreadyHandledException.cs" />
     <Compile Include="BushLife\Exceptions\SyntaxException.cs" />
     <Compile Include="BushLife\Framework\Clone\IPolymorphicClone.cs" />
+    <Compile Include="BushLife\Utils\EmailClient.cs" />
     <Compile Include="BushLife\Framework\Expressions\ExpressionCompiler.cs" />
     <Compile Include="BushLife\Framework\Expressions\ExpressionUtils.cs" />
     <Compile Include="BushLife\Framework\Expressions\SwapVisitor.cs" />
