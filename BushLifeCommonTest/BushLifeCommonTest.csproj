@@ -87,6 +87,7 @@
     <Compile Include="BushLife\Aspects\ExitNullArgumentAspectTest.cs" />
     <Compile Include="BushLife\Aspects\Log4NetLoggerAspectTest.cs" />
     <Compile Include="BushLife\Aspects\Log4NetLoggerBasicTest.cs" />
+    <Compile Include="BushLife\Aspects\ProfilerAspectTest.cs" />
     <Compile Include="BushLife\Utils\EmailClientTest.cs" />
     <Compile Include="BushLife\Framework\Expressions\ExpressionCompilerTest.cs" />
     <Compile Include="BushLife\Framework\Expressions\ExpressionUtilsTest.cs" />

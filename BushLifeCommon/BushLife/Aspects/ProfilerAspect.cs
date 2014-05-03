@@ -16,6 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Diagnostics;
@@ -57,15 +58,41 @@ namespace AU.Com.BushLife.Aspects
 		/// </summary>
 		private Action<ILog, string> LogAction;
 
+		private string Message { get; set; }
+
 		/// <summary>
 		/// Initialise the logger to use to output the log messages
 		/// </summary>
 		/// <param name="method"></param>
-		public override void RuntimeInitialize(System.Reflection.MethodBase method)
+		public override void RuntimeInitialize(MethodBase method)
 		{
 			base.RuntimeInitialize(method);
 			Logger = LogManager.GetLogger(method.DeclaringType.Assembly, method.DeclaringType);
 			LogAction = (logger, str) => logger.Info(str);
+
+			Message = string.Format("{3}] {0}::{1}{2}({3})", 
+					Thread.CurrentThread.Name,
+					method.DeclaringType.FullName,
+					method.Name,
+					GenericArguments(method),
+					Arguments(method)
+					);
+		}
+
+		private string GenericArguments(MethodBase method)
+		{
+			var genericArguments = method.GetGenericArguments();
+			if (genericArguments.Count() > 0)
+				return string.Format("<{0}>", string.Join(",", genericArguments.Select(a => a.Name)));
+			return "";
+		}
+
+		private string Arguments(MethodBase method)
+		{
+			var arguments = method.GetParameters();
+			if (arguments.Count() > 0)
+				return string.Join(",", arguments.Select(a => a.ParameterType.Name + " " + a.Name));
+			return "";
 		}
 
         /// <summary>
@@ -87,11 +114,9 @@ namespace AU.Com.BushLife.Aspects
             stopWatch.Stop();
 			if (stopWatch.ElapsedMilliseconds >= IgnoreMillisecondsLessThan)
 			{
-				string output = string.Format("{3}] {0}::{1} executed in {2} milliseconds",
-					args.Method.DeclaringType.FullName,
-					args.Method.Name,
-					stopWatch.ElapsedMilliseconds,
-					Thread.CurrentThread.Name);
+				string output = string.Format("{0} executed in {1} milliseconds",
+					Message,
+					stopWatch.ElapsedMilliseconds);
 				LogAction(Logger, output);
 			}
         }
