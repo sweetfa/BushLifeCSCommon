@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Gallio.Framework;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
@@ -8,7 +9,8 @@ using MbUnit.Framework.ContractVerifiers;
 namespace AU.Com.BushLife.Aspects
 {
 	[TestFixture]
-	public class ProfilerAspectTest
+    [DeploymentItem("log4net.Config")]
+    public class ProfilerAspectTest
 	{
         [Log4NetLoggerAspect(ConfigFileName = "log4net.config", LogFileName = "MyFirstLogFile.log")]
         public class TestClass
