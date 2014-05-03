@@ -37,6 +37,13 @@ namespace AU.Com.BushLife.Aspects
 			public void Method5<T1, T2>(T1 val1, T2 val2)
 			{
 			}
+
+            [ProfilerAspect]
+            public T Method6<T>()
+                where T: new()
+            {
+                return new T();
+            }
 		}
 
 		[Test]
@@ -51,6 +58,7 @@ namespace AU.Com.BushLife.Aspects
 			cut.Method4<string>("Hello");
 			cut.Method5<Int32, string>(34, "Bye");
 			cut.Method5<string, Int32>("Bye bye", 35);
+            cut.Method6<Int32>();
 		}
 	}
 }

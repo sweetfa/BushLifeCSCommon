@@ -81,9 +81,12 @@ namespace AU.Com.BushLife.Aspects
 
 		private string GenericArguments(MethodBase method)
 		{
-			var genericArguments = method.GetGenericArguments();
-			if (genericArguments.Count() > 0)
-				return string.Format("<{0}>", string.Join(",", genericArguments.Select(a => string.Format("{0}", a.Name))));
+            if (method.IsGenericMethod)
+            {
+                var genericArguments = method.GetGenericArguments();
+                if (genericArguments.Count() > 0)
+                    return string.Format("<{0}>", string.Join(",", genericArguments.Select(a => string.Format("{0}", a.Name))));
+            }
 			return "";
 		}
 
