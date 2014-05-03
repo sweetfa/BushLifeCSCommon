@@ -70,7 +70,7 @@ namespace AU.Com.BushLife.Aspects
 			Logger = LogManager.GetLogger(method.DeclaringType.Assembly, method.DeclaringType);
 			LogAction = (logger, str) => logger.Info(str);
 
-			Message = string.Format("{3}] {0}::{1}{2}({3})", 
+			Message = string.Format("{0}] {1}::{2}{3}({4})", 
 					Thread.CurrentThread.Name,
 					method.DeclaringType.FullName,
 					method.Name,
@@ -83,7 +83,7 @@ namespace AU.Com.BushLife.Aspects
 		{
 			var genericArguments = method.GetGenericArguments();
 			if (genericArguments.Count() > 0)
-				return string.Format("<{0}>", string.Join(",", genericArguments.Select(a => a.Name)));
+				return string.Format("<{0}>", string.Join(",", genericArguments.Select(a => string.Format("{0}", a.Name))));
 			return "";
 		}
 

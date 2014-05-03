@@ -10,7 +10,8 @@ namespace AU.Com.BushLife.Aspects
 	[TestFixture]
 	public class ProfilerAspectTest
 	{
-		public class TestClass
+        [Log4NetLoggerAspect(ConfigFileName = "log4net.config", LogFileName = "MyFirstLogFile.log")]
+        public class TestClass
 		{
 			[ProfilerAspect]
 			public void Method1()
