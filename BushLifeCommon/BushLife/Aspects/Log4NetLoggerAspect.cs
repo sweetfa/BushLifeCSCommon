@@ -128,12 +128,15 @@ namespace AU.Com.BushLife.Aspects
 			}
 			if (Logger.IsDebugEnabled)
 			{
-				foreach (var arg in args.Arguments)
-				{
-					Logger.DebugFormat("{0}: {1}", 
-                        arg == null ? "null" : arg.GetType().Name, 
-                        arg == null ? "null" : arg.ToString());
-				}
+                if (args.Arguments != null && args.Arguments.Count > 0)
+                {
+                    foreach (var arg in args.Arguments)
+                    {
+                        Logger.DebugFormat("{0}: {1}",
+                            arg == null ? "null" : arg.GetType().Name,
+                            arg == null ? "null" : arg.ToString());
+                    }
+                }
 			}
 			base.OnEntry(args);
 		}
@@ -152,15 +155,19 @@ namespace AU.Com.BushLife.Aspects
 			}
 			if (Logger.IsDebugEnabled)
 			{
-				foreach (var arg in args.Arguments)
-				{
-					Logger.DebugFormat("{0}: {1}", 
-                        arg == null ? "null" : arg.GetType().Name, 
-                        arg == null ? "null" : arg.ToString());
-				}
-				Logger.DebugFormat("Returning {0}: {1}", 
-                    args.ReturnValue == null ? "null" : args.ReturnValue.GetType().Name, 
-                    args.ReturnValue == null ? "null" : args.ReturnValue.ToString());
+                if (args.Arguments != null && args.Arguments.Count > 0)
+                {
+                    foreach (var arg in args.Arguments)
+                    {
+                        Logger.DebugFormat("{0}: {1}",
+                            arg == null ? "null" : arg.GetType().Name,
+                            arg == null ? "null" : arg.ToString());
+                    }
+                }
+                if (args.ReturnValue != null)
+				    Logger.DebugFormat("Returning {0}: {1}", 
+                        args.ReturnValue.GetType().Name, 
+                        args.ReturnValue.ToString());
 			}
 		}
 
