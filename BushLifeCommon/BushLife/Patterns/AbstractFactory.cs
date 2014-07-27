@@ -101,5 +101,16 @@ namespace AU.Com.BushLife.Patterns
 					Unregister(FactoryItems.ElementAt(0).Key);
 			}
 		}
+
+        /// <summary>
+        /// Search the values in the factory for the set of factory items
+        /// that match the supplied predicate
+        /// </summary>
+        /// <param name="predicate">The predicate to match the search on.</param>
+        /// <returns>An enumerable of matched values</returns>
+        public IEnumerable<V> SearchValues(Func<V, V> predicate)
+        {
+            return FactoryItems.Values.Select(predicate);
+        }
 	}
 }
