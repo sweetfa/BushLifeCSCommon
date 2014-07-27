@@ -28,29 +28,37 @@ namespace AU.Com.BushLife.Patterns
 	/// <para>This class is thread safe</para>
 	/// <para>K = the type of the key used in the factory</para>
 	/// <para>V = the type of the value object stored in the factory</para>
-	/// <para>C = The comparison object to use implementing the IEqualityComparer interface.  
-	/// Use IEqualityComparer.Default if nothing special is required.  
-	/// In the default case ensure that Equals and GetHashCode are overridden in the Key class</para>
 	/// </summary>
 	/// <typeparam name="K">The type of the key used in the factory</typeparam>
 	/// <typeparam name="V">The type of object stored in the factory</typeparam>
 	/// <typeparam name="C">The comparison object to use.  Use IEqualityComparer.Default if nothing special required</typeparam>
-	public abstract class AbstractFactory<K, V, C>
-		where C : IEqualityComparer<K>, new()
+	public abstract class AbstractFactory<K, V>
 	{
 		private Dictionary<K, V> FactoryItems { get; set; }
 
-		/// <summary>
-		/// Default constructor initialises the dictionary object.  
-		/// No locking is required here as the Singleton owner instance will
-		/// have lock control over instantiation of the constructor.
-		/// </summary>
-		public AbstractFactory()
-		{
-			FactoryItems = new Dictionary<K, V>(new C());
-		}
+        /// <summary>
+        /// Default constructor initialises the dictionary object.  
+        /// No locking is required here as the Singleton owner instance will
+        /// have lock control over instantiation of the constructor.
+        /// </summary>
+        public AbstractFactory()
+        {
+            FactoryItems = new Dictionary<K, V>(EqualityComparer<K>.Default);
+        }
 
-		/// <summary>
+        /// <summary>
+        /// Default constructor initialises the dictionary object.  
+        /// No locking is required here as the Singleton owner instance will
+        /// have lock control over instantiation of the constructor.
+        /// </summary>
+        /// <param name="comparator">The comparison object to use.  Use IEqualityComparer.Default if nothing special required.
+        /// <para>Remember to override GetHasCode() and Equals() methods of the K class</para></param>
+        public AbstractFactory(IEqualityComparer<K> comparator)
+        {
+            FactoryItems = new Dictionary<K, V>(comparator);
+        }
+
+        /// <summary>
 		/// Register an entry in the factory
 		/// </summary>
 		/// <param name="key">The key to register</param>
@@ -108,9 +116,9 @@ namespace AU.Com.BushLife.Patterns
         /// </summary>
         /// <param name="predicate">The predicate to match the search on.</param>
         /// <returns>An enumerable of matched values</returns>
-        public IEnumerable<V> SearchValues(Func<V, V> predicate)
+        public IEnumerable<V> SearchValues(Func<V, bool> predicate)
         {
-            return FactoryItems.Values.Select(predicate);
+            return FactoryItems.Values.Where(predicate);
         }
 	}
 }
