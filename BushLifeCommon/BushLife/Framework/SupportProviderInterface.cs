@@ -61,7 +61,7 @@ namespace AU.Com.BushLife.Framework
             var logfileName = Path.GetFileName(logfilePath);
             using (var stream = new FileStream(logfilePath, FileMode.Open))
             {
-                Attachment logfile = emailClient.CreateAttachment(stream, logfileName, new ContentType("application/text"));
+                Attachment logfile = emailClient.CreateGzipAttachment(stream, logfileName + ".gz", EmailClient.ApplicationGzip);
 
                 var messageBody = string.Format("Problem Description:\n\n{0}\n\n\nSteps to Reproduce:\n\n{1}\n\n", problemDescription, stepsToReproduce);
 

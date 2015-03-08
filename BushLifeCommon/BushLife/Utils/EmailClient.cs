@@ -20,6 +20,7 @@ using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
 using System.IO;
+using System.IO.Compression;
 
 using AU.Com.BushLife.Utils;
 
@@ -54,6 +55,11 @@ namespace AU.Com.BushLife.Utils
         /// XML - Extensible Markup Language (W3C XML)
         /// </summary>
         public static readonly ContentType ApplicationXML = new ContentType("application/XML");
+
+        /// <summary>
+        /// Gzip - Compressed file format
+        /// </summary>
+        public static readonly ContentType ApplicationGzip = new ContentType("application/gzip");
 
         /// <summary>
         /// The client to use to send the email
@@ -130,6 +136,26 @@ namespace AU.Com.BushLife.Utils
         {
             Attachment attachment = new Attachment(stream, attachmentName, mimeType.ToString());
             return attachment;
+        }
+
+        /// <summary>
+        /// Create a GZip attachment from the specified input stream
+        /// </summary>
+        /// <param name="stream">The stream the attachment is to be extracted from</param>
+        /// <param name="attachmentName">The name to use on the attachment in the message</param>
+        /// <param name="mimeType">The MIME type of the attachment</param>
+        /// <returns>A formatted attachment</returns>
+        public Attachment CreateGzipAttachment(Stream stream, string attachmentName, ContentType mimeType)
+        {
+            var outStream = new MemoryStream();
+            using (var compress = new GZipStream(outStream, CompressionMode.Compress))
+            {
+                stream.CopyTo(compress);
+                compress.Close();
+            }
+
+            var ms = new MemoryStream(outStream.ToArray());
+            return CreateAttachment(ms, attachmentName, mimeType);
         }
 
         /// <summary>

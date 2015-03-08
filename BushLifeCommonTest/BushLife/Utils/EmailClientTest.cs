@@ -37,5 +37,17 @@ namespace AU.Com.BushLife.Utils
             client.SendEmail(message, new MailAddress("frank@bushlife.com.au", "Frank Adcock", Encoding.UTF8), new MailAddress("spider@bushlife.com.au", "Bush Life Spider", Encoding.UTF8));
 
         }
+
+        [Test]
+        public void EmailClientSendWithGzipAttachmentTest()
+        {
+            EmailClient client = new EmailClient();
+            client.FromAddress = new MailAddress("noreply@bl_cs_common.bushlife.com.au", "Bush Life Common Test Module", Encoding.UTF8);
+            MailMessage message = client.CreateMessage("Bush Life Common Email Test", "This is the body of a message\n\nRegards\nFrank Adcock\n",
+                client.CreateGzipAttachment(new FileStream(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "BushLifeCommonTest.dll.config"), FileMode.Open), "Attachment 1", EmailClient.ApplicationGzip));
+
+            client.SendEmail(message, new MailAddress("frank@bushlife.com.au", "Frank Adcock", Encoding.UTF8), new MailAddress("spider@bushlife.com.au", "Bush Life Spider", Encoding.UTF8));
+
+        }
     }
 }
