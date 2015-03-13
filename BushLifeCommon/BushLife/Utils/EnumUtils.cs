@@ -62,14 +62,17 @@ namespace AU.Com.BushLife.Utils
 		/// </summary>
 		/// <typeparam name="T">The type of the enum to extract the values for</typeparam>
 		/// <returns>A list of strings representing each value in the Enum</returns>
-		public static ICollection<string> GetEnumValues<T>()
-		{
-			ICollection<string> result = new List<string>();
-			foreach (T e in Enum.GetValues(typeof(T)))
+        /// <exception cref="System.InvalidOperationException">Thrown when type of T is not a System.Enum</exception>
+        public static IEnumerable<string> GetEnumValues<T>()
+            where T : struct
+        {
+            if (!typeof(T).IsEnum)
+                throw new InvalidOperationException("Generic type argument is not a System.Enum");
+            
+            foreach (T e in Enum.GetValues(typeof(T)))
 			{
-				result.Add(e.ToString());
+				yield return e.ToString();
 			}
-			return result;
 		}
 
 		/// <summary>
@@ -77,15 +80,15 @@ namespace AU.Com.BushLife.Utils
 		/// </summary>
 		/// <typeparam name="T">The type of the enum to extract the values for</typeparam>
 		/// <returns>A list of enums representing each value in the Enum</returns>
-		public static ICollection<T> GetValues<T>()
-		{
-			ICollection<T> result = new List<T>();
-			foreach (T e in Enum.GetValues(typeof(T)))
-			{
-				result.Add(e);
-			}
-			return result;
-		}
+        /// <exception cref="System.InvalidOperationException">Thrown when type of T is not a System.Enum</exception>
+        public static IEnumerable<T> GetValues<T>() 
+            where T : struct
+        {
+            if (!typeof(T).IsEnum) 
+                throw new InvalidOperationException("Generic type argument is not a System.Enum");
+
+            return Enum.GetValues(typeof(T)).OfType<T>();
+        } 
 
 		/// <summary>
 		/// Get the name representation of the label for the enum
@@ -93,9 +96,14 @@ namespace AU.Com.BushLife.Utils
 		/// <typeparam name="T">The type of the enum</typeparam>
 		/// <param name="value">The enum to get the label for</param>
 		/// <returns>The string representation of the enum label</returns>
-		public static string GetName<T>(T value)
-		{
-			return Enum.GetName(typeof(T), value);
+        /// <exception cref="System.InvalidOperationException">Thrown when type of T is not a System.Enum</exception>
+        public static string GetName<T>(T value)
+            where T : struct
+        {
+            if (!typeof(T).IsEnum)
+                throw new InvalidOperationException("Generic type argument is not a System.Enum");
+
+            return Enum.GetName(typeof(T), value);
 		}
 
 		/// <summary>
@@ -112,16 +120,31 @@ namespace AU.Com.BushLife.Utils
 		/// <summary>
 		/// Get the description label for the enum value.
 		/// <para>[Description("A")] custom attribute on the enum value will return the value A</para>
+        /// <para>Defaults to the name of the enum label if no description attribute available</para>
 		/// </summary>
 		/// <typeparam name="T">The type of the enum</typeparam>
 		/// <param name="value">The value of the enum the description is required for</param>
 		/// <returns>The custom attribute Description value</returns>
-		public static string GetDescription<T>(this T value)
+        /// <exception cref="System.InvalidOperationException">Thrown when type of T is not a System.Enum</exception>
+        public static string GetDescription<T>(this T value)
+            where T : struct
 		{
-			return ((DescriptionAttribute)Attribute.GetCustomAttribute(
-				typeof(T).GetFields(BindingFlags.Public | BindingFlags.Static)
-						.Single(x => ((T)x.GetValue(null)).Equals(value)),
-				typeof(DescriptionAttribute))).Description;
+            if (!typeof(T).IsEnum)
+                throw new InvalidOperationException("Generic type argument is not a System.Enum");
+
+            try
+            {
+                return ((DescriptionAttribute)Attribute.GetCustomAttribute(
+                    typeof(T).GetFields(BindingFlags.Public | BindingFlags.Static)
+                            .Single(x => ((T)x.GetValue(null)).Equals(value)),
+                    typeof(DescriptionAttribute))).Description;
+			}
+			catch (NullReferenceException)
+			{
+				// This exception received when no Description attribute
+				// associated with Enum members
+				return GetName<T>(value);
+			}
 		}
 
 		/// <summary>
@@ -134,9 +157,14 @@ namespace AU.Com.BushLife.Utils
 		/// <returns>The enum for the string</returns>
 		/// <exception cref="System.ArgumentOutOfRangeException">The enumDescription
 		/// did not match any Description attributes on the enum</exception>
-		public static T GetValueForDescription<T>(string enumDescription, StringComparison stringComparison = StringComparison.CurrentCulture)
+        /// <exception cref="System.InvalidOperationException">Thrown when type of T is not a System.Enum</exception>
+        public static T GetValueForDescription<T>(string enumDescription, StringComparison stringComparison = StringComparison.CurrentCulture)
+            where T : struct
 		{
-			foreach (T t in GetValues<T>())
+            if (!typeof(T).IsEnum)
+                throw new InvalidOperationException("Generic type argument is not a System.Enum");
+
+            foreach (T t in GetValues<T>())
 			{
 				if (GetDescription<T>(t).Equals(enumDescription, stringComparison))
 					return t;
@@ -144,29 +172,47 @@ namespace AU.Com.BushLife.Utils
 			throw new ArgumentOutOfRangeException(string.Format("{0} is invalid for {1}", enumDescription, typeof(T).Name));
 		}
 
-		/// <summary>
+        /// <summary>
+        /// Provide an iterator for iterating over all of the set
+        /// bits in the enum value
+        /// </summary>
+        /// <param name="input">The enum value</param>
+        /// <returns>The list of set flag bits</returns>
+        /// <exception cref="System.InvalidOperationException">Thrown when type of T is not a System.Enum</exception>
+        public static IEnumerable<T> GetFlags<T>(this T input)
+            where T : struct
+        {
+            if (!typeof(T).IsEnum)
+                throw new InvalidOperationException("Generic type argument is not a System.Enum");
+
+            var inputEnum = input as Enum;
+            foreach (var value in EnumUtils.GetValues<T>())
+            {
+                var valueEnum = value as Enum;
+                if (inputEnum.HasFlag(valueEnum))
+                    yield return value;
+            }
+        }
+        
+        /// <summary>
 		/// Return the contents of the enumeration as formatted for a combo box
 		/// relying on the Description attribute containing the display value
 		/// within the enum definition
 		/// </summary>
 		/// <typeparam name="T">The type of the enum being retrieved</typeparam>
 		/// <returns>The collection of enum values and description fields</returns>
-		public static ICollection<ComboBoxLoader<T>> GetEnumComboBox<T>()
-		{
-			ICollection<ComboBoxLoader<T>> result = new List<ComboBoxLoader<T>>();
+        /// <exception cref="System.InvalidOperationException">Thrown when type of T is not a System.Enum</exception>
+        public static ICollection<ComboBoxLoader<T>> GetEnumComboBox<T>()
+            where T : struct
+        {
+            if (!typeof(T).IsEnum)
+                throw new InvalidOperationException("Generic type argument is not a System.Enum");
+
+            ICollection<ComboBoxLoader<T>> result = new List<ComboBoxLoader<T>>();
 			foreach (T e in Enum.GetValues(typeof(T)))
 			{
 				ComboBoxLoader<T> value = new ComboBoxLoader<T>();
-				try
-				{
-					value.Display = GetDescription(e);
-				}
-				catch (NullReferenceException)
-				{
-					// This exception received when no Description attribute
-					// associated with Enum members
-					value.Display = e.ToString();
-				}
+				value.Display = GetDescription(e);
 				value.Value = e;
 				result.Add(value);
 			}
