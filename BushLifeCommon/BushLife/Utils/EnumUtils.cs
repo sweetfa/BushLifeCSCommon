@@ -19,6 +19,7 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace AU.Com.BushLife.Utils
 {
@@ -126,6 +127,7 @@ namespace AU.Com.BushLife.Utils
 		/// <param name="value">The value of the enum the description is required for</param>
 		/// <returns>The custom attribute Description value</returns>
         /// <exception cref="System.InvalidOperationException">Thrown when type of T is not a System.Enum</exception>
+        [DebuggerStepThrough]
         public static string GetDescription<T>(this T value)
             where T : struct
 		{

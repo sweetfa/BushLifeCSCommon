@@ -18,6 +18,7 @@ using System.Text;
 using System.Reflection;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Collections.ObjectModel;
 
 namespace AU.Com.BushLife.Utils
 {
@@ -98,25 +99,6 @@ namespace AU.Com.BushLife.Utils
 			}
 			return result;
 		}
-
-		/// <summary>
-		/// Deep clone a dictionary
-		/// </summary>
-		/// <typeparam name="K">The type of the key of the dictionary being cloned</typeparam>
-		/// <typeparam name="V">The type of the value of the dictionary being cloned</typeparam>
-		/// <param name="cloneable">The dictionary being cloned</param>
-		/// <returns>A cloned copy of the dictionary</returns>
-		//public static IDictionary<K, V> Clone<K, V>(this IDictionary<K, V> cloneable) 
-		//    where K : ICloneable
-		//    where V : ICloneable
-		//{
-		//    IDictionary<K, V> result = new Dictionary<K, V>();
-		//    foreach (KeyValuePair<K, V> kvp in cloneable)
-		//    {
-		//        result.Add((K) kvp.Key.Clone(),(V) kvp.Value.Clone());
-		//    }
-		//    return result;
-		//}
 
 		/// <summary>
 		/// Array extension method to fill an array with the specified value
@@ -290,7 +272,8 @@ namespace AU.Com.BushLife.Utils
 		}		
 		#endregion
 
-		/// <summary>
+        #region IEnumerable Functions
+        /// <summary>
 		/// Return a distinct set ordered by the key selector
 		/// </summary>
 		/// <typeparam name="TSource">The type of the source list</typeparam>
@@ -310,5 +293,45 @@ namespace AU.Com.BushLife.Utils
 			}
 		}
 
-	}
+        /// <summary>
+        /// Partition an enumerable into multiple enumerables based on a size
+        /// </summary>
+        /// <typeparam name="T">The type in the enumerable</typeparam>
+        /// <param name="source">The collection of items to partition</param>
+        /// <param name="size">The number of items to include in each partition</param>
+        /// <returns>The collection of partitioned collections</returns>
+        public static IEnumerable<IEnumerable<T>> Partition<T>(this IEnumerable<T> source, int size)
+        {
+            return source.Partition((a, i) => a.Count() <= size);
+        }
+
+        /// <summary>
+        /// Partition a collection of items into groups based on a predicate function
+        /// </summary>
+        /// <typeparam name="T">The type of the item to partition</typeparam>
+        /// <param name="source">The list of items to group on</param>
+        /// <param name="predicate">A predicate function that is supplied the current group, 
+        /// and the next item to attempt to add. 
+        /// <para>Should return true if the item can be added to the group, 
+        /// and false if the item cannot be added to the group</para></param>
+        /// <returns>The group of groups resulting from the application of the predicate function</returns>
+        public static IEnumerable<IEnumerable<T>> Partition<T>(this IEnumerable<T> source, Func<IEnumerable<T>, T, bool> predicate)
+        {
+            IList<T> array = new List<T>();
+            foreach (T item in source)
+            {
+                if (!predicate(array, item))
+                {
+                    yield return array;
+                    array = new List<T>();
+                }
+                array.Add(item);
+            }
+            if (array.Count > 0)
+            {
+                yield return array;
+            }
+        }
+        #endregion
+    }
 }
