@@ -19,6 +19,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Reflection;
+using System.Drawing.Printing;
 
 using System.Security.Principal;
 
@@ -359,5 +360,17 @@ namespace AU.Com.BushLife.Utils
 			return files.ToList();
 		}
 		#endregion
-	}
+
+        #region Printer Utilities
+        /// <summary>
+        /// Get the list of printer names that the system has access to
+        /// </summary>
+        /// <returns>The list of printers</returns>
+        public IEnumerable<String> GetPrinterNames()
+        {
+            foreach (var printer in PrinterSettings.InstalledPrinters)
+                yield return printer.ToString();
+        }
+        #endregion
+    }
 }
