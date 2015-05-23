@@ -332,6 +332,55 @@ namespace AU.Com.BushLife.Utils
                 yield return array;
             }
         }
+
+        /// <summary>
+        /// Group a set of items based on a set of rules.  This function works on 
+        /// sequentially processing a list of items, using the canFitPredicate function
+        /// to determine the number that should fit into the current group.
+        /// </summary>
+        /// <typeparam name="T">The type of the item in the list</typeparam>
+        /// <param name="source">The source list</param>
+        /// <param name="canFitPredicate">A predicate to sequentially check each of the items from the source 
+        /// to determine how many of its number will fit into a group</param>
+        /// <param name="fullCount">A function to determine if the T item has exhausted all its available items</param>
+        /// <param name="splitFunction">A function to split the T item into two component parts based on a 
+        /// count of items to shift into the first group</param>
+        /// <returns>The collection of groups</returns>
+        public static IEnumerable<IEnumerable<T>> Partition<T>(
+            this IEnumerable<T> source,
+            Func<IEnumerable<T>, T, int> canFitPredicate,
+            Func<T, int, bool> fullCount,
+            Func<T, int, T> splitFunction)
+        {
+            IList<T> array = new List<T>();
+            foreach (T item in source)
+            {
+                var count = canFitPredicate(array, item);
+                if (count == 0)
+                {
+                    yield return array;
+                    array = new List<T>();
+                }
+                else if (!fullCount(item, count))
+                {
+                    do
+                    {
+                        var newItem = splitFunction(item, count);
+                        array.Add(newItem);
+                        yield return array;
+                        array = new List<T>();
+                        count = canFitPredicate(array, item);
+                    }
+                    while (!fullCount(item, count));
+                }
+                array.Add(item);
+            }
+            if (array.Count > 0)
+            {
+                yield return array;
+            }
+        }
+
         #endregion
     }
 }
