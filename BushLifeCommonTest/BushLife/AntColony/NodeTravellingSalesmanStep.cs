@@ -77,7 +77,7 @@ namespace AU.Com.BushLife.AntColony
 
 		public IEnumerable<IPheremoneKey> Available(IAntColonyContext context)
 		{
-			foreach (IPheremoneKey key in context.Steps.Where(s => !((context.Path as INodePath).Steps.OfType<IStep>().Where(k => k.Equals(s)).Count() > 0)).OfType<IPheremoneKey>())
+			foreach (IPheremoneKey key in context.Steps.Where(s => !((context.Path as INodePath).Steps.OfType<IStep>().Any(k => k.Equals(s)))).OfType<IPheremoneKey>())
 				yield return key;
 		}
 

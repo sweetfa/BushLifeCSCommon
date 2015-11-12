@@ -51,7 +51,7 @@ namespace AU.Com.BushLife.AntColony
 
 		public bool Contains(IStep step)
 		{
-			return Steps.Where(e => e.Equals(step)).Count() > 0;
+			return Steps.Any(e => e.Equals(step));
 		}
 
 		public void Add(IStep step, decimal score)
