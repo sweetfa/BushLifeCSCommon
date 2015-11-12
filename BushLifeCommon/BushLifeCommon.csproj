@@ -97,6 +97,7 @@
     <Compile Include="BushLife\Attributes\UpdateTrackerCollectionAttribute.cs" />
     <Compile Include="BushLife\Exceptions\AlreadyHandledException.cs" />
     <Compile Include="BushLife\Exceptions\SyntaxException.cs" />
+    <Compile Include="BushLife\Framework\CacheItem.cs" />
     <Compile Include="BushLife\Framework\Clone\ICloneableDeep.cs" />
     <Compile Include="BushLife\Framework\Clone\ICloneableShallow.cs" />
     <Compile Include="BushLife\Framework\Clone\IPolymorphicClone.cs" />
