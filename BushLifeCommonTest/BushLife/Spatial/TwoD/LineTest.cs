@@ -221,7 +221,7 @@ namespace AU.Com.BushLife.Spatial.TwoD
 		}
 
 
-		[Test,Factory("IsPerpendicularDataProvider"),DependsOn("AngleToTest")]
+		[Test,Factory("IsPerpendicularDataProvider")]
 		public void IsPerpendicularTest(Line2D<Int32> line1, Line2D<Int32> line2, bool expectedResult)
 		{
 			Assert.AreEqual(expectedResult, line1.IsPerpendicular(line2));
