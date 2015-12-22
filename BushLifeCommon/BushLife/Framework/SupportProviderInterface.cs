@@ -94,8 +94,7 @@ namespace AU.Com.BushLife.Framework
             }
             else
             {
-                var logfileName = Path.GetFileName(logfilePath);
-                return new List<String>() { logfileName };
+                return new List<String>() { logfilePath };
             }
         }
 

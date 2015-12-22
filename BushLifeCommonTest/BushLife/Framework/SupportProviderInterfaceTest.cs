@@ -34,6 +34,15 @@ namespace AU.Com.BushLife.Framework
                     true,
                     1
                 };
+                yield return new object[]
+                {
+                    "test@bushlife.com.au",
+                    "LogFileAppender",
+                    "Run this test",
+                    "Test fails to lodge a support request",
+                    false,
+                    1
+                };
             }
         }
 
