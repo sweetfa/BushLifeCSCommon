@@ -102,6 +102,7 @@
     <Compile Include="BushLife\Framework\Clone\ICloneableShallow.cs" />
     <Compile Include="BushLife\Framework\Clone\IPolymorphicClone.cs" />
     <Compile Include="BushLife\Framework\SupportProviderInterface.cs" />
+    <Compile Include="BushLife\Utils\DateExtensions.cs" />
     <Compile Include="BushLife\Utils\EmailClient.cs" />
     <Compile Include="BushLife\Framework\Expressions\ExpressionCompiler.cs" />
     <Compile Include="BushLife\Framework\Expressions\ExpressionUtils.cs" />
@@ -158,6 +159,8 @@
     <Compile Include="BushLife\Utils\Indexer.cs" />
     <Compile Include="BushLife\Utils\LanguageUtils.cs" />
     <Compile Include="BushLife\Utils\MathsUtils.cs" />
+    <Compile Include="BushLife\Utils\NetworkUtils.cs" />
+    <Compile Include="BushLife\Utils\PrinterUtils.cs" />
     <Compile Include="BushLife\Utils\ReflectionUtils.cs" />
     <Compile Include="BushLife\Utils\StreamUtils.cs" />
     <Compile Include="BushLife\Utils\StringUtils.cs" />
@@ -165,7 +168,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="BushLifeCommon.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
