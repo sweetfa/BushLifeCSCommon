@@ -147,15 +147,17 @@ namespace AU.Com.BushLife.Utils
         /// <returns>A formatted attachment</returns>
         public Attachment CreateGzipAttachment(Stream stream, string attachmentName, ContentType mimeType)
         {
-            var outStream = new MemoryStream();
-            using (var compress = new GZipStream(outStream, CompressionMode.Compress))
+            using (var outStream = new MemoryStream())
             {
-                stream.CopyTo(compress);
-                compress.Close();
-            }
+                using (var compress = new GZipStream(outStream, CompressionMode.Compress))
+                {
+                    stream.CopyTo(compress);
+                    compress.Close();
+                }
 
-            var ms = new MemoryStream(outStream.ToArray());
-            return CreateAttachment(ms, attachmentName, mimeType);
+                var ms = new MemoryStream(outStream.ToArray());
+                return CreateAttachment(ms, attachmentName, mimeType);
+            }
         }
 
         /// <summary>

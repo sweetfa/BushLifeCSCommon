@@ -51,24 +51,51 @@ namespace AU.Com.BushLife.Framework
         /// <param name="logfileAppenderName">The name of the log file appender as configured in the log4net configuration for the application</param>
         /// <param name="problemDescription">The user described problem description</param>
         /// <param name="stepsToReproduce">The user described steps to reproduce the issue</param>
-        public static void LogSupportRequest(string supportEmailAddress, string logfileAppenderName, string problemDescription, string stepsToReproduce)
+        /// <param name="allFiles">Flag indicating if all log files should be extracted</param>
+        public static void LogSupportRequest(string supportEmailAddress, string logfileAppenderName, string problemDescription, string stepsToReproduce, bool allFiles)
         {
             var emailClient = new EmailClient();
 
             emailClient.FromAddress = new MailAddress(CurrentUserEmailAddress(), CurrentUserDisplayName());
 
-            var logfilePath = GetLogFilePath(logfileAppenderName);
-            var logfileName = Path.GetFileName(logfilePath);
-            using (var stream = new FileStream(logfilePath, FileMode.Open))
+            var messageBody = string.Format("Problem Description:\n\n{0}\n\n\nSteps to Reproduce:\n\n{1}\n\n", problemDescription, stepsToReproduce);
+
+            MailMessage message = emailClient.CreateMessage("NOES Support Request from " + System.Environment.MachineName, messageBody);
+
+            var files = GetLogFiles(logfileAppenderName, allFiles);
+            foreach (var logfilePath in files)
             {
-                Attachment logfile = emailClient.CreateGzipAttachment(stream, logfileName + ".gz", EmailClient.ApplicationGzip);
+                var logfileName = Path.GetFileName(logfilePath);
+                using (var stream = new FileStream(logfilePath, FileMode.Open))
+                {
+                    Attachment logfile = emailClient.CreateGzipAttachment(stream, logfileName + ".gz", EmailClient.ApplicationGzip);
+                    message.Attachments.Add(logfile);
+                }
+            }
 
-                var messageBody = string.Format("Problem Description:\n\n{0}\n\n\nSteps to Reproduce:\n\n{1}\n\n", problemDescription, stepsToReproduce);
+            var supportAddress = new MailAddress(supportEmailAddress);
+            emailClient.SendEmail(message, supportAddress);
+        }
 
-                MailMessage message = emailClient.CreateMessage("NOES Support Request from " + System.Environment.MachineName, messageBody, logfile);
-
-                var supportAddress = new MailAddress(supportEmailAddress);
-                emailClient.SendEmail(message, supportAddress);
+        /// <summary>
+        /// Get log files, all or just the latest depending on the state of the allFiles flag
+        /// </summary>
+        /// <param name="logfileAppenderName">The log4net log file appender to extract the path from</param>
+        /// <param name="allFiles">True if all log files are to be retrieved, false if only the most recent</param>
+        /// <returns>The list of log file names</returns>
+        private static ICollection<String> GetLogFiles(string logfileAppenderName, bool allFiles)
+        {
+            var logfilePath = GetLogFilePath(logfileAppenderName);
+            if (allFiles)
+            {
+                var dirname = Path.GetDirectoryName(logfilePath);
+                var filename = string.Format("{0}*", Path.GetFileName(logfilePath));
+                return Directory.GetFiles(dirname, filename).ToList();
+            }
+            else
+            {
+                var logfileName = Path.GetFileName(logfilePath);
+                return new List<String>() { logfileName };
             }
         }
 

@@ -15,30 +15,30 @@ namespace AU.Com.BushLife.Aspects
         [Log4NetLoggerAspect(ConfigFileName = "log4net.config", LogFileName = "MyFirstLogFile.log")]
         public class TestClass
 		{
-			[ProfilerAspect]
+			[ProfilerAspect(AspectPriority=2)]
 			public void Method1()
 			{
 			}
 
-			[ProfilerAspect]
+            [ProfilerAspect(AspectPriority = 2)]
 			public void Method2(Int32 val)
 			{
 			}
-			[ProfilerAspect]
+            [ProfilerAspect(AspectPriority = 2)]
 			public void Method3(string strparam, Int32 val)
 			{
 			}
-			[ProfilerAspect]
+            [ProfilerAspect(AspectPriority = 2)]
 			public void Method4<T>(T val)
 			{
 			}
 
-			[ProfilerAspect]
+            [ProfilerAspect(AspectPriority = 2)]
 			public void Method5<T1, T2>(T1 val1, T2 val2)
 			{
 			}
 
-            [ProfilerAspect]
+            [ProfilerAspect(AspectPriority = 2)]
             public T Method6<T>()
                 where T: new()
             {
