@@ -76,7 +76,7 @@ namespace AU.Com.BushLife.Framework
             #endregion
 
             #region Execute Test
-            SupportProviderInterface.LogSupportRequest(supportEmailAddress, logfileAppenderName, problemDescription, stepsToReproduce, allFiles);
+            new SupportProviderInterface().LogSupportRequest(supportEmailAddress, logfileAppenderName, problemDescription, stepsToReproduce, allFiles);
             #endregion
 
             #region Verify Results

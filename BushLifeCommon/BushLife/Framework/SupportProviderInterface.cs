@@ -41,8 +41,25 @@ namespace AU.Com.BushLife.Framework
     /// and the file name that the logfile appender uses is the logfile
     /// that is picked up and attached to the email as an attachment</para>
     /// </summary>
-    public static class SupportProviderInterface
+    public class SupportProviderInterface
     {
+        /// <summary>
+        /// Delegate defining the interface for the support progress event initialisation
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public delegate void InitialiseSupportProgressEvent(object sender, InitialiseProgressEventArgs e);
+
+        /// <summary>
+        /// Event to notify the intialisation of a progress monitoring event
+        /// </summary>
+        public event InitialiseSupportProgressEvent InitialiseSupportProgress;
+
+        /// <summary>
+        /// Event to notify an incremental step has been completed in the progress
+        /// </summary>
+        public event EventHandler UpdateSupportProgress = delegate {};
+
         /// <summary>
         /// Log a support request with the support provider, including the log file
         /// and supplied problem description
@@ -52,7 +69,7 @@ namespace AU.Com.BushLife.Framework
         /// <param name="problemDescription">The user described problem description</param>
         /// <param name="stepsToReproduce">The user described steps to reproduce the issue</param>
         /// <param name="allFiles">Flag indicating if all log files should be extracted</param>
-        public static void LogSupportRequest(string supportEmailAddress, string logfileAppenderName, string problemDescription, string stepsToReproduce, bool allFiles)
+        public void LogSupportRequest(string supportEmailAddress, string logfileAppenderName, string problemDescription, string stepsToReproduce, bool allFiles)
         {
             var emailClient = new EmailClient();
 
@@ -62,7 +79,13 @@ namespace AU.Com.BushLife.Framework
 
             MailMessage message = emailClient.CreateMessage("NOES Support Request from " + System.Environment.MachineName, messageBody);
 
-            var files = GetLogFiles(logfileAppenderName, allFiles);
+            var files = Log4NetExtensions.GetLogFiles(logfileAppenderName, allFiles);
+            // Initialise any progress listeners
+            if (InitialiseSupportProgress != null)
+            {
+                var e = new InitialiseProgressEventArgs() { ElementCount = files.Count };
+                InitialiseSupportProgress(this, e);
+            }
             foreach (var logfilePath in files)
             {
                 var logfileName = Path.GetFileName(logfilePath);
@@ -71,31 +94,13 @@ namespace AU.Com.BushLife.Framework
                     Attachment logfile = emailClient.CreateGzipAttachment(stream, logfileName + ".gz", EmailClient.ApplicationGzip);
                     message.Attachments.Add(logfile);
                 }
+                // Update any progress listeners
+                if (UpdateSupportProgress != null)
+                    UpdateSupportProgress(this, EventArgs.Empty);
             }
 
             var supportAddress = new MailAddress(supportEmailAddress);
             emailClient.SendEmail(message, supportAddress);
-        }
-
-        /// <summary>
-        /// Get log files, all or just the latest depending on the state of the allFiles flag
-        /// </summary>
-        /// <param name="logfileAppenderName">The log4net log file appender to extract the path from</param>
-        /// <param name="allFiles">True if all log files are to be retrieved, false if only the most recent</param>
-        /// <returns>The list of log file names</returns>
-        private static ICollection<String> GetLogFiles(string logfileAppenderName, bool allFiles)
-        {
-            var logfilePath = GetLogFilePath(logfileAppenderName);
-            if (allFiles)
-            {
-                var dirname = Path.GetDirectoryName(logfilePath);
-                var filename = string.Format("{0}*", Path.GetFileName(logfilePath));
-                return Directory.GetFiles(dirname, filename).ToList();
-            }
-            else
-            {
-                return new List<String>() { logfilePath };
-            }
         }
 
         /// <summary>
@@ -124,20 +129,6 @@ namespace AU.Com.BushLife.Framework
             return WinUtils.GetCurrentUserNameWithoutDomain();
         }
 
-        /// <summary>
-        /// Get the path of the log file
-        /// <para>TODO: Move this into a set of utilities for logger management</para>
-        /// </summary>
-        /// <param name="logfileAppenderName">The name of the log file appender 
-        /// as specified in the log4net configuration file for the calling application</param>
-        /// <returns>The full UNC path name to the log file</returns>
-        private static string GetLogFilePath(string logfileAppenderName)
-        {
-            var appenders = LogManager.GetRepository(Assembly.GetCallingAssembly()).GetAppenders();
-            var appender = appenders.Where(l => l.Name == logfileAppenderName).Single();
-            var rollingFileAppender = appender as RollingFileAppender;
-            return rollingFileAppender.File;
-        }
     }
 }
 

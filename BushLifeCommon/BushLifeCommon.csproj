@@ -101,6 +101,7 @@
     <Compile Include="BushLife\Framework\Clone\ICloneableDeep.cs" />
     <Compile Include="BushLife\Framework\Clone\ICloneableShallow.cs" />
     <Compile Include="BushLife\Framework\Clone\IPolymorphicClone.cs" />
+    <Compile Include="BushLife\Framework\InitialiseProgressEventArgs.cs" />
     <Compile Include="BushLife\Framework\SupportProviderInterface.cs" />
     <Compile Include="BushLife\Utils\DateExtensions.cs" />
     <Compile Include="BushLife\Utils\EmailClient.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="BushLife\Utils\GenericUtils.cs" />
     <Compile Include="BushLife\Utils\Indexer.cs" />
     <Compile Include="BushLife\Utils\LanguageUtils.cs" />
+    <Compile Include="BushLife\Utils\Log4NetExtensions.cs" />
     <Compile Include="BushLife\Utils\MathsUtils.cs" />
     <Compile Include="BushLife\Utils\NetworkUtils.cs" />
     <Compile Include="BushLife\Utils\PrinterUtils.cs" />
