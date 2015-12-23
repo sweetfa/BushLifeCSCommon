@@ -73,7 +73,7 @@ namespace AU.Com.BushLife.Framework
         {
             var emailClient = new EmailClient();
 
-            emailClient.FromAddress = new MailAddress(CurrentUserEmailAddress(), CurrentUserDisplayName());
+            emailClient.FromAddress = new MailAddress(WinUtils.CurrentUserEmailAddress(), WinUtils.GetCurrentUserNameWithoutDomain());
 
             var messageBody = string.Format("Problem Description:\n\n{0}\n\n\nSteps to Reproduce:\n\n{1}\n\n", problemDescription, stepsToReproduce);
 
@@ -101,32 +101,6 @@ namespace AU.Com.BushLife.Framework
 
             var supportAddress = new MailAddress(supportEmailAddress);
             emailClient.SendEmail(message, supportAddress);
-        }
-
-        /// <summary>
-        /// Get the current user email address
-        /// </summary>
-        /// <returns></returns>
-        private static string CurrentUserEmailAddress()
-        {
-            var userPrincipal = UserPrincipal.Current;
-            if (userPrincipal != null)
-            {
-                if (userPrincipal.EmailAddress != null && userPrincipal.EmailAddress.Length > 0)
-                    return userPrincipal.EmailAddress;
-            }
-            var username = WinUtils.GetCurrentUserNameWithoutDomain();
-            var domain = IPGlobalProperties.GetIPGlobalProperties();
-            return string.Format("{0}@{1}.{2}", username, domain.HostName, domain.DomainName);
-        }
-
-        /// <summary>
-        /// Get the current user display name
-        /// </summary>
-        /// <returns></returns>
-        private static string CurrentUserDisplayName()
-        {
-            return WinUtils.GetCurrentUserNameWithoutDomain();
         }
 
     }

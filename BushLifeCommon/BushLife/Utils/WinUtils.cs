@@ -24,6 +24,8 @@ using System.Drawing.Printing;
 using System.Security.Principal;
 
 using AU.Com.BushLife.Patterns;
+using System.DirectoryServices.AccountManagement;
+using System.Net.NetworkInformation;
 
 namespace AU.Com.BushLife.Utils
 {
@@ -307,11 +309,20 @@ namespace AU.Com.BushLife.Utils
 		#region Security
 
 		#region Authentication
+        /// <summary>
+        /// Get the authentication principal for the current user
+        /// </summary>
+        /// <returns>The principal for the user</returns>
 		public static IPrincipal GetPrincipal()
 		{
 			return GetPrincipal(WindowsIdentity.GetCurrent());
 		}
 
+        /// <summary>
+        /// Get the authentication principal for the specified identity
+        /// </summary>
+        /// <param name="identity">The identity to get the principal for</param>
+        /// <returns>The principal for the user</returns>
 		public static IPrincipal GetPrincipal(WindowsIdentity identity)
 		{
 			IPrincipal principal = new WindowsPrincipal(identity);
@@ -342,7 +353,24 @@ namespace AU.Com.BushLife.Utils
 			return parts[0];
 		}
 
-		#endregion
+        /// <summary>
+        /// Get the current user email address
+        /// </summary>
+        /// <returns></returns>
+        public static string CurrentUserEmailAddress()
+        {
+            var userPrincipal = WinUtils.GetPrincipal() as UserPrincipal;
+            if (userPrincipal != null)
+            {
+                if (userPrincipal.EmailAddress != null && userPrincipal.EmailAddress.Length > 0)
+                    return userPrincipal.EmailAddress;
+            }
+            var username = WinUtils.GetCurrentUserNameWithoutDomain();
+            var domain = IPGlobalProperties.GetIPGlobalProperties();
+            return string.Format("{0}@{1}.{2}", username, domain.HostName, domain.DomainName);
+        }
+
+        #endregion
 
 		#region Authorisation
 		public static bool IsUserInRole(IPrincipal principal, string rolename)
