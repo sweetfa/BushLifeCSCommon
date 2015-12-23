@@ -61,7 +61,7 @@ namespace AU.Com.BushLife.Framework
             Log.InfoFormat("Test Starting");
 
             var attachment = Isolate.Fake.Instance<Attachment>();
-            var added = 0;
+            //var added = 0;
 
             var message = Isolate.Fake.Instance<MailMessage>(Members.MustSpecifyReturnValues, ConstructorWillBe.Called);
             //Isolate.WhenCalled(() => message.Attachments).CallOriginal();
