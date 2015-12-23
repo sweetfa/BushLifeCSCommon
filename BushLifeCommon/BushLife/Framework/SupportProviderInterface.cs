@@ -31,6 +31,7 @@ using log4net.Appender;
 
 using AU.Com.BushLife.Aspects;
 using AU.Com.BushLife.Utils;
+using System.Windows.Forms;
 
 namespace AU.Com.BushLife.Framework
 {
@@ -96,7 +97,10 @@ namespace AU.Com.BushLife.Framework
                 }
                 // Update any progress listeners
                 if (UpdateSupportProgress != null)
+                {
                     UpdateSupportProgress(this, EventArgs.Empty);
+                    Application.DoEvents();
+                }
             }
 
             var supportAddress = new MailAddress(supportEmailAddress);
