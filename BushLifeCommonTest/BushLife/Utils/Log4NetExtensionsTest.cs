@@ -80,7 +80,7 @@ namespace AU.Com.BushLife.Utils
 
         private void RolloverSetup()
         {
-            for (int i = 0; i < 10000; i++)
+            for (int i = 0; i < 8000; i++)
                 Log.InfoFormat("Filling up the log file with a number of messages {0}", i);
         }
 
