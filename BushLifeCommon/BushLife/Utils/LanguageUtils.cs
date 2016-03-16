@@ -361,19 +361,23 @@ namespace AU.Com.BushLife.Utils
                     yield return array;
                     array = new List<T>();
                 }
-                else if (!fullCount(item, count))
+                if (!fullCount(item, count))
                 {
                     do
                     {
-                        var newItem = splitFunction(item, count);
-                        array.Add(newItem);
-                        yield return array;
-                        array = new List<T>();
+                        if (count > 0)
+                        {
+                            var newItem = splitFunction(item, count);
+                            array.Add(newItem);
+                            yield return array;
+                            array = new List<T>();
+                        }
                         count = canFitPredicate(array, item);
                     }
                     while (!fullCount(item, count));
                 }
-                array.Add(item);
+                if (count > 0)
+                    array.Add(item);
             }
             if (array.Count > 0)
             {
