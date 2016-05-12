@@ -9,12 +9,12 @@ namespace AU.Com.BushLife.Aspects
 {
 	[TestClass]
     [DeploymentItem("log4net.Config")]
-	public class Log4NetLoggerAspectTest
+	public class Log4NetLoggerAspectTest2
 	{
         private string FilePath { get; set; }
 
-        [Log4NetLoggerAspect(ConfigFileName = "log4net.config", LogFileName = "MySecondLogFile.log")]
-        public class TestClass
+        [Log4NetLoggerAspect(ConfigFileName = "log4net.config", LogFilePath = "C:\\Temp", LogFileName = "MyFirstLogFile.log")]
+        public class TestClass2
         {
             public void Method1()
             {
@@ -43,19 +43,19 @@ namespace AU.Com.BushLife.Aspects
         [TestInitialize]
         public void TestInitialize()
         {
-            string pathname = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            FilePath = Path.Combine(pathname, "MySecondLogFile.log");
+            string pathname = "C:\\Temp";
+            FilePath = Path.Combine(pathname, "MyFirstLogFile.log");
             File.Delete(FilePath);
         }
 
         [TestMethod]
-		public void Log4NetAspectTest1()
-		{
-			TestClass cut = new TestClass();
+        public void Log4NetAspectTest2()
+        {
+            TestClass2 cut = new TestClass2();
 
-			cut.Method1();
-			cut.Method2(32);
-			cut.Method3(567, "Hello dolly");
+            cut.Method1();
+            cut.Method2(32);
+            cut.Method3(567, "Hello dolly");
             try
             {
                 cut.Method4();
@@ -64,7 +64,8 @@ namespace AU.Com.BushLife.Aspects
             {
             }
             Assert.IsTrue(File.Exists(FilePath));
-		}
+        }
+
 
 	}
 }

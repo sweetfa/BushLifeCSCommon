@@ -42,8 +42,14 @@ namespace AU.Com.BushLife.Aspects
 	[MulticastAttributeUsage(MulticastTargets.Method, Inheritance = MulticastInheritance.Multicast)]
 	public sealed class Log4NetLoggerAspect : OnMethodBoundaryAspect
 	{
-		private static bool Initialised = false;
+        /// <summary>
+        /// Flag to indicate if the aspect has been initialsed yet
+        /// </summary>
+        public static bool Initialised { get; set; }
 
+        /// <summary>
+        /// The logger to use to output the log file messages
+        /// </summary>
 		private ILog Logger { get; set; }
 
 		/// <summary>
@@ -52,8 +58,14 @@ namespace AU.Com.BushLife.Aspects
 		/// definition for the file in a rollingfileappender</para>
 		/// <para>        &lt;file type="log4net.Util.PatternString" value="%property{LogFileName}"/></para>
 		/// <para>The log file is created in the LocalApplicationData directory</para>
+        /// <para>The location of the log file can be overridden by setting the LogFilePath parameter</para>
 		/// </summary>
 		public string LogFileName { get; set; }
+
+        /// <summary>
+        /// The path to the log file location.  If not set the log file is created in the LocalApplicationData directory
+        /// </summary>
+        public string LogFilePath { get; set; }
 
 		/// <summary>
 		/// The name of the log4net config file
@@ -72,6 +84,7 @@ namespace AU.Com.BushLife.Aspects
 				throw new InvalidAnnotationException(string.Format("ConfigFileName is not defined and must be defined: {0}.{1}()", method.ReflectedType.FullName, method.Name));
 			if (LogFileName == null || LogFileName.Length == 0)
 				throw new InvalidAnnotationException(string.Format("LogFileName is not defined and must be defined: {0}.{1}()", method.ReflectedType.FullName, method.Name));
+            Initialised = false;
 			return base.CompileTimeValidate(method);
 		}
 
@@ -99,21 +112,42 @@ namespace AU.Com.BushLife.Aspects
 
 		/// <summary>
 		/// Initialise the log4net framework
+        /// <para>The log file name is specified in a property that is configured in the log4j config file</para>
 		/// </summary>
 		/// <param name="method"></param>
 		private void InitialiseLog4Net(MethodBase method)
 		{
 			// Initialise the underlying log4net system. This only needs to be done once per application
-			string configDirectory = Path.GetDirectoryName(method.DeclaringType.Assembly.Location);
-			string configPath = Path.Combine(configDirectory, ConfigFileName);
-			FileInfo fileInfo = new FileInfo(configPath);
 			ILoggerRepository repository = LogManager.GetRepository(method.DeclaringType.Assembly);
 
-			string pathName = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-			string logFilePath = Path.Combine(pathName, LogFileName);
-			GlobalContext.Properties["LogFileName"] = logFilePath;
-			XmlConfigurator.Configure(repository, fileInfo);
+			GlobalContext.Properties["LogFileName"] = BuildLogFilePath();
+            XmlConfigurator.Configure(repository, BuildConfigFilePath(method.DeclaringType.Assembly.Location));
 		}
+
+        /// <summary>
+        /// Generate the path to the log config file which should be in the calling applications classpath
+        /// </summary>
+        /// <param name="logfilePath">The path to the config log file</param>
+        /// <returns>The FileInfo instance</returns>
+        private FileInfo BuildConfigFilePath(String logfilePath)
+        {
+            string configDirectory = Path.GetDirectoryName(logfilePath);
+            string configPath = Path.Combine(configDirectory, ConfigFileName);
+            return new FileInfo(configPath);
+        }
+
+        /// <summary>
+        /// Create the path to the log file.  By default will use the users Local directory,
+        /// but can be overridden in arguments for the configuration of this aspect.
+        /// </summary>
+        /// <returns>The log file path</returns>
+        private String BuildLogFilePath()
+        {
+            string pathname = LogFilePath;
+            if (String.IsNullOrEmpty(pathname))
+                pathname = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            return Path.Combine(pathname, LogFileName);
+        }
 
 		/// <summary>
 		/// Output a logger message indicating method entry
