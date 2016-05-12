@@ -68,7 +68,7 @@ namespace AU.Com.BushLife.Aspects
 		{
 			base.RuntimeInitialize(method);
 			Logger = LogManager.GetLogger(method.DeclaringType.Assembly, method.DeclaringType);
-			LogAction = (logger, str) => logger.Info(str);
+            LogAction = (logger, str) => { if (logger.IsInfoEnabled) logger.Info(str); };
 
 			Message = string.Format("{0}] {1}::{2}{3}({4})", 
 					Thread.CurrentThread.Name,
