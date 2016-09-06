@@ -86,7 +86,7 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 						message += "\n" + exception.Message;
 						exception = exception.InnerException;
 					}
-					Logger.Error(message, exception);
+					Logger.Error(message, args.Exception);
 				}
 			}
 			if (IgnoreAndContinue)
