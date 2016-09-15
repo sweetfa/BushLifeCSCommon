@@ -15,7 +15,7 @@ using log4net;
 
 namespace AU.Com.BushLife.Framework
 {
-    [Log4NetLoggerAspect(ConfigFileName = "log4net.config", LogFileName = "BushLife.log", AspectPriority = 2)]
+    [Log4NetLoggerAspect(ConfigFileName = "log4net.config", LogFileName = "BushLife.log", AspectPriority = 2, ApplyToStateMachine = false)]
     [TestFixture]
     public class SupportProviderInterfaceTest
     {

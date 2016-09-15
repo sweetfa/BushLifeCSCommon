@@ -11,7 +11,7 @@ using log4net;
 namespace AU.Com.BushLife.Utils
 {
     [TestFixture]
-    [Log4NetLoggerAspect(ConfigFileName = "log4net.config", LogFileName = "BushLife.log", AspectPriority = 2)]
+    [Log4NetLoggerAspect(ConfigFileName = "log4net.config", LogFileName = "BushLife.log", AspectPriority = 2, ApplyToStateMachine = false)]
     public class Log4NetExtensionsTest
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(Log4NetExtensionsTest));
