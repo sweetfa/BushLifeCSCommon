@@ -89,7 +89,7 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 			{
 				if (SpecificExceptionType == null)
 					throw new InvalidAnnotationException(string.Format("A specific exception must be defined when ExcludeMessageShow == true: {0}.{1}()", method.ReflectedType.FullName, method.Name));
-                if (Formatter == null)
+                if (Formatter != null)
                     throw new InvalidAnnotationException(string.Format("No message will be shown.  Formatter argument is useless: {0}.{1}()", method.ReflectedType.FullName, method.Name));
                 if (string.IsNullOrEmpty(Message))
                     throw new InvalidAnnotationException(string.Format("No message will be shown.  Message argument is useless: {0}.{1}()", method.ReflectedType.FullName, method.Name));
