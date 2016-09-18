@@ -4,24 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Forms;
-using Gallio.Framework;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
 
 using TypeMock.ArrangeActAssert;
 
 using log4net;
 using AU.Com.BushLife.Utils;
 using AU.Com.BushLife.Exceptions;
+using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 {
-	[TestFixture]
+    [TestFixture]
 	public class ShowExceptionAttributeTest
 	{
 		private static ILog Logger = LogManager.GetLogger(typeof(ShowExceptionAttributeTest));
 
-		[Test]
+        public static string FormattedException = "Formatter set this value";
+
+        [Test]
 		[Isolated]
 		public void ShowExceptionTestSpecificException1()
 		{
@@ -85,7 +86,6 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 
 		[Test]
 		[Isolated]
-		[ExpectedArgumentException]
 		public void ShowExceptionTestSpecificException3()
 		{
 			#region Set up test data
@@ -117,8 +117,8 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 
 		[Test]
 		[Isolated]
-		[ExpectedArgumentException]
-		public void ShowExceptionTestSpecificException4()
+        [ExpectedException(typeof(ArgumentException))]
+        public void ShowExceptionTestSpecificException4()
 		{
 			#region Set up test data
 			string message = "Hello dolly";
@@ -180,8 +180,8 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 
 		[Test]
 		[Isolated]
-		[ExpectedArgumentException]
-		public void ShowExceptionTestSpecificException6()
+        [ExpectedException(typeof(ArgumentException))]
+        public void ShowExceptionTestSpecificException6()
 		{
 			#region Set up test data
 			string message = "Hello dolly\n\nSystem.ArgumentException\nValue cannot be null.\r\nParameter name: Something is wrong as well";
@@ -287,25 +287,75 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 			#endregion
 		}
 
-		[Test]
-		[Isolated]
-		public void TestMessageBoxTest()
-		{
-			#region Set up test data
-			Isolate.Fake.StaticMethods<System.Windows.MessageBox>(Members.ReturnRecursiveFakes);
-			#endregion
+        [Test]
+        [Isolated]
+        public void TestMessageBoxTest()
+        {
+            #region Set up test data
+            Isolate.Fake.StaticMethods<System.Windows.MessageBox>(Members.ReturnRecursiveFakes);
+            #endregion
 
-			#region Execute test
-			System.Windows.MessageBox.Show("Hello dolly", "", MessageBoxButton.OK, MessageBoxImage.Error);
-			#endregion
+            #region Execute test
+            System.Windows.MessageBox.Show("Hello dolly", "", MessageBoxButton.OK, MessageBoxImage.Error);
+            #endregion
 
-			#region Verity results
-			Isolate.Verify.WasCalledWithExactArguments(() => System.Windows.MessageBox.Show("Hello dolly", "", MessageBoxButton.OK, MessageBoxImage.Error));
-			#endregion
-		}
-	}
+            #region Verity results
+            Isolate.Verify.WasCalledWithExactArguments(() => System.Windows.MessageBox.Show("Hello dolly", "", MessageBoxButton.OK, MessageBoxImage.Error));
+            #endregion
+        }
 
-	public class TestClass : Form
+        [Test]
+        [Isolated]
+        public void TestFormatterMessageBoxTest1()
+        {
+            #region Set up test data
+            Isolate.Fake.StaticMethods<System.Windows.MessageBox>(Members.ReturnRecursiveFakes);
+            #endregion
+
+            #region Execute test
+            System.Windows.MessageBox.Show("Hello dolly", "", MessageBoxButton.OK, MessageBoxImage.Error);
+            #endregion
+
+            #region Verity results
+            Isolate.Verify.WasCalledWithExactArguments(() => System.Windows.MessageBox.Show("Hello dolly", "", MessageBoxButton.OK, MessageBoxImage.Error));
+            #endregion
+        }
+
+        [Test]
+        [Isolated]
+        public void ShowExceptionFormatter1()
+        {
+            #region Set up test data
+            string message = "Hello dolly 2";
+            string caption = "Exception Occurred";
+            MessageBoxButton button = MessageBoxButton.OK;
+            MessageBoxImage image = MessageBoxImage.Error;
+
+            Isolate.Fake.StaticMethods<Window>(Members.MustSpecifyReturnValues);
+            Isolate.Fake.StaticMethods<System.Windows.MessageBox>(Members.ReturnRecursiveFakes);
+            //Isolate.WhenCalled(() => System.Windows.MessageBox.Show((string)null, (string)null, MessageBoxButton.OK, MessageBoxImage.Error)).DoInstead((c) => DumpMessage(c, new object[] { message, caption, button, image }));
+            #endregion
+
+            #region Execute test
+            try
+            {
+                TestClass cut = new TestClass();
+                cut.MyMethod9();
+            }
+            catch (AlreadyHandledException)
+            {
+            }
+            #endregion
+
+            #region Verity results
+            Isolate.Verify.WasCalledWithExactArguments(() => System.Windows.MessageBox.Show(FormattedException, caption, button, image));
+            #endregion
+        }
+
+
+    }
+
+    public class TestClass : Form
 	{
 		[ShowException(Message = "Hello dolly", SpecificExceptionType = typeof(System.ArgumentException), ShowExceptionDetail = true)]
 		public bool MyMethod1()
@@ -350,12 +400,27 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 			throw new ArgumentNullException("Something is wrong as well");
 		}
 
-		[ShowException(Message = "Hello dolly 3", SpecificExceptionType = typeof(System.ArgumentNullException), ShowExceptionDetail = false, AspectPriority = 5)]
-		[ShowException(Message = "Hello dolly 4", ShowExceptionDetail = false, AspectPriority = 6)]
-		public bool MyMethod8()
-		{
-			throw new ArgumentException("Something is wrong as well");
-		}
-	}
+        [ShowException(Message = "Hello dolly 3", SpecificExceptionType = typeof(System.ArgumentNullException), ShowExceptionDetail = false, AspectPriority = 5)]
+        [ShowException(Message = "Hello dolly 4", ShowExceptionDetail = false, AspectPriority = 6)]
+        public bool MyMethod8()
+        {
+            throw new ArgumentException("Something is wrong as well");
+        }
+
+        [ShowException(Message = "Hello dolly 3", SpecificExceptionType = typeof(System.ArgumentException), ShowExceptionDetail = false, AspectPriority = 5, Formatter = typeof(TestFormatter), AttributePriority = 2)]
+        [ShowException(Message = "Hello dolly 4", ShowExceptionDetail = false, AspectPriority = 4, AttributePriority = 1)]
+        public void MyMethod9()
+        {
+            throw new ArgumentException("Something is wrong as well");
+        }
+
+        private class TestFormatter : ExceptionFormatter
+        {
+            public string FormatException(Exception exception, bool showExceptionDetail)
+            {
+                return ShowExceptionAttributeTest.FormattedException;
+            }
+        }
+    }
 
 }

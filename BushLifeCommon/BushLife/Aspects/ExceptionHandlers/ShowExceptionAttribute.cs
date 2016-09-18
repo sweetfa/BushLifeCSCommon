@@ -35,17 +35,19 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 	[Serializable]
 	[ProvideAspectRole(StandardRoles.ExceptionHandling)]
 	[ShowExceptionAttribute(AttributeExclude = true)]
-	public sealed class ShowExceptionAttribute : OnExceptionAspect
+    [MulticastAttributeUsage(MulticastTargets.Method, Inheritance = MulticastInheritance.Multicast)]
+    public sealed class ShowExceptionAttribute : OnExceptionAspect
 	{
 		/// <summary>
 		/// The caption on the message box.  If this value is null no caption is displayed
 		/// </summary>
 		public string Caption { get; set; }
 
-		/// <summary>
-		/// The message to display in the dialog box
-		/// </summary>
-		public string Message { get; set; }
+        /// <summary>
+        /// The message to display in the dialog box
+        /// <para>This parameter is mutually exclusive with the Formatter parameter</para>
+        /// </summary>
+        public string Message { get; set; }
 
 		/// <summary>
 		/// If flag is set to true the details of the exception are added to the message
@@ -64,27 +66,57 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 		/// </summary>
 		public Type SpecificExceptionType { get; set; }
 
+        /// <summary>
+        /// If this value is set the message displayed will be generated through this formatter
+        /// <para>This parameter is ignored if ExcludeMessageShow is true</para>
+        /// <para>This parameter is mutually exclusive with the Message parameter</para>
+        /// </summary>
+        public Type Formatter { get; set; }
+
+        /// <summary>
+        /// The instantiated instance of the message formatter selected
+        /// </summary>
+        private ExceptionFormatter MessageFormatter { get; set; }
+
 		/// <summary>
 		/// Ensure the required properties are provided at compile time
 		/// </summary>
 		/// <param name="method"></param>
-		/// <returns></returns>
+		/// <returns>true if no compilation issues</returns>
 		public override bool CompileTimeValidate(MethodBase method)
 		{
 			if (ExcludeMessageShow)
 			{
 				if (SpecificExceptionType == null)
 					throw new InvalidAnnotationException(string.Format("A specific exception must be defined when ExcludeMessageShow == true: {0}.{1}()", method.ReflectedType.FullName, method.Name));
-			}
-			else
+                if (Formatter == null)
+                    throw new InvalidAnnotationException(string.Format("No message will be shown.  Formatter argument is useless: {0}.{1}()", method.ReflectedType.FullName, method.Name));
+                if (string.IsNullOrEmpty(Message))
+                    throw new InvalidAnnotationException(string.Format("No message will be shown.  Message argument is useless: {0}.{1}()", method.ReflectedType.FullName, method.Name));
+            }
+            else
 			{
-				if (Message == null)
-					throw new InvalidAnnotationException(string.Format("Message property is not defined and must be defined: {0}.{1}()", method.ReflectedType.FullName, method.Name));
-			}
-			return base.CompileTimeValidate(method);
+                if (string.IsNullOrEmpty(Message) && Formatter == null)
+                    throw new InvalidAnnotationException(string.Format("Message and Formatter property are not defined and one only must be defined: {0}.{1}()", method.ReflectedType.FullName, method.Name));
+                if (Formatter != null)
+                {
+                    if ((Formatter as ExceptionFormatter) != null)
+                        throw new InvalidAnnotationException(string.Format("Formatter property must be of type ExceptionFormatter: {0}.{1}()", method.ReflectedType.FullName, method.Name));
+                }
+            }
+            return base.CompileTimeValidate(method);
 		}
 
-		public override Type GetExceptionType(MethodBase targetMethod)
+        public override void RuntimeInitialize(MethodBase method)
+        {
+            base.RuntimeInitialize(method);
+            if (Formatter != null)
+            {
+                MessageFormatter = Activator.CreateInstance(Formatter) as ExceptionFormatter;
+            }
+        }
+
+        public override Type GetExceptionType(MethodBase targetMethod)
 		{
 			if (SpecificExceptionType != null)
 				return SpecificExceptionType;
@@ -98,9 +130,7 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 			{
 				if (!ExcludeMessageShow)
 				{
-					string message = Message;
-					if (ShowExceptionDetail)
-						message = string.Format("{0}\n\n{1}\n{2}", Message, args.Exception.GetType().FullName, args.Exception.Message);
+                    string message = BuildMessage(args.Exception);
 
 					// Get the parent window if available
 					DependencyObject dependencyObject = args.Instance as DependencyObject;
@@ -110,17 +140,17 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 
 					if (window != null)
 					{
-						if (Caption != null)
-							System.Windows.MessageBox.Show(window, Message, Caption, MessageBoxButton.OK, MessageBoxImage.Error);
+                        if (Caption != null)
+                            ShowWindowMessage(window, Caption, Message);
 						else
-							System.Windows.MessageBox.Show(window, Message, window.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+                            ShowWindowMessage(window, window.Name, Message);
 					}
 					else
 					{
-						if (Caption != null)
-							System.Windows.MessageBox.Show(message, Caption, MessageBoxButton.OK, MessageBoxImage.Error);
+                        if (Caption != null)
+                            ShowMessage(Caption, message);
 						else
-							System.Windows.MessageBox.Show(message, "Exception Occurred", MessageBoxButton.OK, MessageBoxImage.Error);
+                            ShowMessage("Exception Occurred", message);
 					}
 				}
 			}
@@ -134,5 +164,44 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 			base.OnException(args);
 		}
 
-	}
+        /// <summary>
+        /// Build a message from the exception
+        /// </summary>
+        /// <param name="exception"></param>
+        /// <returns></returns>
+        private string BuildMessage(Exception exception)
+        {
+            var message = Message;
+            if (ShowExceptionDetail && message != null)
+                message = string.Format("{0}\n\n{1}\n{2}", Message, exception.GetType().FullName, exception.Message);
+            if (Formatter != null)
+            {
+                if (MessageFormatter == null)
+                    MessageFormatter = Activator.CreateInstance(Formatter) as ExceptionFormatter;
+                message = MessageFormatter.FormatException(exception, ShowExceptionDetail);
+            }
+            return message;
+        }
+
+        /// <summary>
+        /// Show a message box associated with a Window
+        /// </summary>
+        /// <param name="window">The window the message is to associate with</param>
+        /// <param name="caption">The caption on the message box</param>
+        /// <param name="message">The message to display in the message box</param>
+        private void ShowWindowMessage(Window window, string caption, string message)
+        {
+            System.Windows.MessageBox.Show(window, message, caption, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        /// <summary>
+        /// Show a message box 
+        /// </summary>
+        /// <param name="caption">The caption on the message box</param>
+        /// <param name="message">The message to display in the message box</param>
+        private void ShowMessage(string caption, string message)
+        {
+            System.Windows.MessageBox.Show(message, caption, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
 }

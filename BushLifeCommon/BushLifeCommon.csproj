@@ -94,6 +94,7 @@
     <Compile Include="BushLife\Aspects\ExceptionHandlers\InvalidOperationExceptionAspect.cs" />
     <Compile Include="BushLife\Aspects\ExceptionHandlers\LogExceptionAttribute.cs" />
     <Compile Include="BushLife\Aspects\ExceptionHandlers\ShowExceptionAttribute.cs" />
+    <Compile Include="BushLife\Aspects\ExceptionHandlers\ExceptionFormatter.cs" />
     <Compile Include="BushLife\Aspects\ExitNullArgumentCheckAspect.cs" />
     <Compile Include="BushLife\Aspects\GlobalAspects.cs" />
     <Compile Include="BushLife\Aspects\Hibernate\HibernateTransactionAspect.cs" />

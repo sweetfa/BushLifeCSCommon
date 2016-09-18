@@ -24,6 +24,8 @@ using PostSharp.Aspects.Dependencies;
 using log4net;
 
 using AU.Com.BushLife.Exceptions;
+using PostSharp.Extensibility;
+using System.Reflection;
 
 namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 {
@@ -47,9 +49,19 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 		/// </summary>
 		public Type ExceptionType { get; set; }
 
+        /// <summary>
+        /// The logger to use to output logging
+        /// </summary>
 		private ILog Logger { get; set; }
 
-		public override void RuntimeInitialize(System.Reflection.MethodBase method)
+        /// <summary>
+        /// If this value is set the message displayed will be generated through this formatter
+        /// <para>This parameter is ignored if ExcludeMessageShow is true</para>
+        /// <para>This parameter is mutually exclusive with the Message parameter</para>
+        /// </summary>
+        public ExceptionFormatter Formatter { get; set; }
+
+        public override void RuntimeInitialize(System.Reflection.MethodBase method)
 		{
 			base.RuntimeInitialize(method);
 			Logger = LogManager.GetLogger(method.DeclaringType.Assembly, method.DeclaringType);
@@ -79,13 +91,7 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 			{
 				if (!args.Exception.IsAlreadyHandled(this.GetType()))
 				{
-					string message = "\n" + args.Exception.Message;
-					Exception exception = args.Exception;
-					while (exception.InnerException != null)
-					{
-						message += "\n" + exception.Message;
-						exception = exception.InnerException;
-					}
+                    var message = BuildMessage(args.Exception);
 					Logger.Error(message, args.Exception);
 				}
 			}
@@ -99,5 +105,24 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 			else
 				args.FlowBehavior = FlowBehavior.Default;
 		}
-	}
+
+        /// <summary>
+        /// Construct the message to display for the error
+        /// </summary>
+        /// <param name="exception">The exception to build the error message from</param>
+        /// <returns>A string containing the error message</returns>
+        private string BuildMessage(Exception exception)
+        {
+            if (Formatter != null)
+                return Formatter.FormatException(exception, true);
+
+            var message = "\n" + exception.Message;
+            while (exception.InnerException != null)
+            {
+                message += "\n" + exception.Message;
+                exception = exception.InnerException;
+            }
+            return message;
+        }
+    }
 }
