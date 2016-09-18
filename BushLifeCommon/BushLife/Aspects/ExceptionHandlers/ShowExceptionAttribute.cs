@@ -91,7 +91,7 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 					throw new InvalidAnnotationException(string.Format("A specific exception must be defined when ExcludeMessageShow == true: {0}.{1}()", method.ReflectedType.FullName, method.Name));
                 if (Formatter != null)
                     throw new InvalidAnnotationException(string.Format("No message will be shown.  Formatter argument is useless: {0}.{1}()", method.ReflectedType.FullName, method.Name));
-                if (string.IsNullOrEmpty(Message))
+                if (!string.IsNullOrEmpty(Message))
                     throw new InvalidAnnotationException(string.Format("No message will be shown.  Message argument is useless: {0}.{1}()", method.ReflectedType.FullName, method.Name));
             }
             else
@@ -174,10 +174,8 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
             var message = Message;
             if (ShowExceptionDetail && message != null)
                 message = string.Format("{0}\n\n{1}\n{2}", Message, exception.GetType().FullName, exception.Message);
-            if (Formatter != null)
+            if (MessageFormatter != null)
             {
-                if (MessageFormatter == null)
-                    MessageFormatter = Activator.CreateInstance(Formatter) as ExceptionFormatter;
                 message = MessageFormatter.FormatException(exception, ShowExceptionDetail);
             }
             return message;
