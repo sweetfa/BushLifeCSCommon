@@ -2,61 +2,58 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Gallio.Framework;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
-
 using TypeMock.ArrangeActAssert;
 using TypeMock;
 
 using AU.Com.BushLife.Framework.Matrix;
 using AU.Com.BushLife.Utils;
+using NUnit.Framework;
 
 namespace AU.Com.BushLife.AntColony
 {
-	[TestFixture]
+    [TestFixture]
 	[Isolated]
 	public class ColonyTest
 	{
-		private PathTravellingSalesmanStep Adelaide;
-		private PathTravellingSalesmanStep Brisbane;
-		private PathTravellingSalesmanStep Canberra;
-		private PathTravellingSalesmanStep Darwin;
-		private PathTravellingSalesmanStep Melbourne;
-		private PathTravellingSalesmanStep Perth;
-		private PathTravellingSalesmanStep Sydney;
-		private NodeTravellingSalesmanStep AdelaideNode;
-		private NodeTravellingSalesmanStep BrisbaneNode;
-		private NodeTravellingSalesmanStep CanberraNode;
-		private NodeTravellingSalesmanStep DarwinNode;
-		private NodeTravellingSalesmanStep MelbourneNode;
-		private NodeTravellingSalesmanStep PerthNode;
-		private NodeTravellingSalesmanStep SydneyNode;
+		private static PathTravellingSalesmanStep Adelaide;
+		private static PathTravellingSalesmanStep Brisbane;
+		private static PathTravellingSalesmanStep Canberra;
+		private static PathTravellingSalesmanStep Darwin;
+		private static PathTravellingSalesmanStep Melbourne;
+		private static PathTravellingSalesmanStep Perth;
+		private static PathTravellingSalesmanStep Sydney;
+		private static NodeTravellingSalesmanStep AdelaideNode;
+		private static NodeTravellingSalesmanStep BrisbaneNode;
+		private static NodeTravellingSalesmanStep CanberraNode;
+		private static NodeTravellingSalesmanStep DarwinNode;
+		private static NodeTravellingSalesmanStep MelbourneNode;
+		private static NodeTravellingSalesmanStep PerthNode;
+		private static NodeTravellingSalesmanStep SydneyNode;
 
-		private PathTravellingSalesmanEdge AdelaideBrisbane;
-		private PathTravellingSalesmanEdge AdelaideCanberra;
-		private PathTravellingSalesmanEdge AdelaideDarwin;
-		private PathTravellingSalesmanEdge AdelaideMelbourne;
-		private PathTravellingSalesmanEdge AdelaidePerth;
-		private PathTravellingSalesmanEdge BrisbaneAdelaide;
-		private PathTravellingSalesmanEdge BrisbaneDarwin;
-		private PathTravellingSalesmanEdge BrisbaneSydney;
-		private PathTravellingSalesmanEdge CanberraAdelaide;
-		private PathTravellingSalesmanEdge CanberraMelbourne;
-		private PathTravellingSalesmanEdge CanberraSydney;
-		private PathTravellingSalesmanEdge DarwinAdelaide;
-		private PathTravellingSalesmanEdge DarwinBrisbane;
-		private PathTravellingSalesmanEdge MelbourneAdelaide;
-		private PathTravellingSalesmanEdge MelbourneCanberra;
-		private PathTravellingSalesmanEdge MelbourneSydney;
-		private PathTravellingSalesmanEdge SydneyBrisbane;
-		private PathTravellingSalesmanEdge SydneyCanberra;
-		private PathTravellingSalesmanEdge SydneyMelbourne;
-		private PathTravellingSalesmanEdge PerthAdelaide;
+		private static PathTravellingSalesmanEdge AdelaideBrisbane;
+		private static PathTravellingSalesmanEdge AdelaideCanberra;
+		private static PathTravellingSalesmanEdge AdelaideDarwin;
+		private static PathTravellingSalesmanEdge AdelaideMelbourne;
+		private static PathTravellingSalesmanEdge AdelaidePerth;
+		private static PathTravellingSalesmanEdge BrisbaneAdelaide;
+		private static PathTravellingSalesmanEdge BrisbaneDarwin;
+		private static PathTravellingSalesmanEdge BrisbaneSydney;
+		private static PathTravellingSalesmanEdge CanberraAdelaide;
+		private static PathTravellingSalesmanEdge CanberraMelbourne;
+		private static PathTravellingSalesmanEdge CanberraSydney;
+		private static PathTravellingSalesmanEdge DarwinAdelaide;
+		private static PathTravellingSalesmanEdge DarwinBrisbane;
+		private static PathTravellingSalesmanEdge MelbourneAdelaide;
+		private static PathTravellingSalesmanEdge MelbourneCanberra;
+		private static PathTravellingSalesmanEdge MelbourneSydney;
+		private static PathTravellingSalesmanEdge SydneyBrisbane;
+		private static PathTravellingSalesmanEdge SydneyCanberra;
+		private static PathTravellingSalesmanEdge SydneyMelbourne;
+		private static PathTravellingSalesmanEdge PerthAdelaide;
 
 
-		[FixtureInitializer]
-		private void FixtureInitialise()
+		[OneTimeSetUp]
+		public void FixtureInitialise()
 		{
 			Adelaide = new PathTravellingSalesmanStep("Adelaide");
 			Brisbane = new PathTravellingSalesmanStep("Brisbane");
@@ -144,7 +141,7 @@ namespace AU.Com.BushLife.AntColony
 			};
 		}
 
-		private IEnumerable<object[]> PathColonyTestData
+		private static IEnumerable<object[]> PathColonyTestData
 		{
 			get
 			{
@@ -203,9 +200,9 @@ namespace AU.Com.BushLife.AntColony
 		}
 
 		[Test]
-		[Factory("PathColonyTestData")]
+		[TestCaseSource("PathColonyTestData")]
 		[Isolated]
-        [Disable("Initialise Pheremones not set up properly")]
+        [Ignore("Initialise Pheremones not set up properly")]
 		public void AntColonyPathAntTest(Int32 numberOfAnts, Int32 numberOfIterations, decimal initialPheremone, decimal evaporationRate,
 			IPathPath path,
 			ICollection<IStep> steps,
@@ -228,7 +225,7 @@ namespace AU.Com.BushLife.AntColony
 			Assert.IsNotNull(context.BestPaths);
 			context.BestPaths.ForEach(p => Console.WriteLine(string.Format("Best Path: [{0}] {1},{2}", (p as IPathPath).Score, (p as IPathPath).Edges.First().StartStep.StepName, string.Join(",", (p as IPathPath).Edges.Select(e => e.EndStep.StepName)))));
 			Assert.AreEqual(expectedResult.Count, context.BestPaths.Count);
-			Assert.AreElementsEqualIgnoringOrder(expectedResult, context.BestPaths);
+			CollectionAssert.AreEquivalent(expectedResult, context.BestPaths);
 			#endregion
 
 		}
@@ -244,7 +241,7 @@ namespace AU.Com.BushLife.AntColony
         }
 
 
-		private IEnumerable<object[]> NodeColonyTestData
+		private static IEnumerable<object[]> NodeColonyTestData
 		{
 			get
 			{
@@ -268,9 +265,9 @@ namespace AU.Com.BushLife.AntColony
 		}
 
 		[Test]
-		[Factory("NodeColonyTestData")]
+		[TestCaseSource("NodeColonyTestData")]
 		[Isolated]
-		[Disable("The mechanism for this mode not yet sorted")]
+		[Ignore("The mechanism for this mode not yet sorted")]
 		public void AntColonyNodeAntTest(Int32 numberOfAnts, Int32 numberOfIterations, decimal initialPheremone, decimal evaporationRate,
 			INodePath path,
 			ICollection<INodePath> expectedResult)
@@ -306,7 +303,7 @@ namespace AU.Com.BushLife.AntColony
 			Assert.IsNotNull(context.BestPaths);
 			context.BestPaths.ForEach(p => Console.WriteLine(string.Format("Best Path: [{0}] {1}", (p as INodePath).Score, string.Join(",", (p as INodePath).Steps.Select(e => (e as IStep).StepName)))));
 			Assert.AreEqual(expectedResult.Count, context.BestPaths.Count);
-			Assert.AreElementsEqualIgnoringOrder(expectedResult, context.BestPaths);
+			CollectionAssert.AreEquivalent(expectedResult, context.BestPaths);
 			#endregion
 
 		}

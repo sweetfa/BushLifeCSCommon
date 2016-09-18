@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Gallio.Framework;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using NUnit.Framework;
 
 namespace AU.Com.BushLife.Spatial.ThreeD
 {
 	[TestFixture]
 	public class Line3DTest
 	{
-		private IEnumerable<object[]> LineIntersectionDataProvider
+		private static IEnumerable<object[]> LineIntersectionDataProvider
 		{
 			get
 			{
@@ -23,7 +21,7 @@ namespace AU.Com.BushLife.Spatial.ThreeD
 			}
 		}
 
-		[Test,Factory("LineIntersectionDataProvider"),Disable("Function does not work so disable tests until it is working again")]
+		[Test, TestCaseSource("LineIntersectionDataProvider"),Ignore("Function does not work so disable tests until it is working again")]
 		public void Intersection3DTest(Line3D<Int32> line1, Line3D<Int32> line2, bool intersects, Point3D<Int32> intersectionPoint)
 		{
 			Point3D<Int32> ip;

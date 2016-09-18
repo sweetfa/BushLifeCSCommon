@@ -4,9 +4,7 @@ using System.Reflection;
 using System.Linq;
 using System.IO;
 using System.Text;
-using Gallio.Framework;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using NUnit.Framework;
 
 namespace AU.Com.BushLife.Utils
 {
@@ -14,7 +12,7 @@ namespace AU.Com.BushLife.Utils
     public class AssemblyUtilsTest
     {
         [Test]
-        [Disable("Only used for manual testing")]
+        [Ignore("Only used for manual testing")]
         public void ListResourcesTest()
         {
             Assembly assembly = Assembly.LoadFrom(@"C:\Users\Frank Adcock\AppData\Local\NOES.exe");
@@ -22,7 +20,7 @@ namespace AU.Com.BushLife.Utils
         }
 
         [Test]
-        [Disable("Only used for manual testing")]
+        [Ignore("Only used for manual testing")]
         public void ExtractResourceToFileTest()
         {
             Assembly assembly = Assembly.LoadFrom(@"C:\Users\Frank Adcock\AppData\Local\NOES.exe");

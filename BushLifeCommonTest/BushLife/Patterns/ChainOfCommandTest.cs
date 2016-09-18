@@ -13,10 +13,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Gallio.Framework;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
 using System.Reflection;
+using NUnit.Framework;
 
 namespace AU.Com.BushLife.Patterns
 {
@@ -76,7 +74,7 @@ namespace AU.Com.BushLife.Patterns
         }
 
         // Tests destined for success
-        private IEnumerable<object[]> DataProvider1
+        private static IEnumerable<object[]> DataProvider1
         {
             get
             {
@@ -96,7 +94,7 @@ namespace AU.Com.BushLife.Patterns
         }
 
         // Tests destined for failure
-        private IEnumerable<object[]> DataProvider2
+        private static IEnumerable<object[]> DataProvider2
         {
             get
             {
@@ -125,14 +123,14 @@ namespace AU.Com.BushLife.Patterns
             }
         }
 
-        [Test, Factory("DataProvider1")]
+        [Test, TestCaseSource("DataProvider1")]
         public void TestChainOfCommandWorksNullContext(List<ICommand<MyContext>> commands, int visitedCount)
         {
             ChainOfCommand<MyContext> c = new ChainOfCommand<MyContext>(commands);
             Assert.AreEqual(IResult.Successful, c.Execute(null));
         }
 
-        [Test, Factory("DataProvider1")]
+        [Test, TestCaseSource("DataProvider1")]
         public void TestChainOfCommandWorks(List<ICommand<MyContext>> commands, int visitedCount)
         {
             MyContext context = new MyContext();
@@ -141,14 +139,14 @@ namespace AU.Com.BushLife.Patterns
             Assert.AreEqual(visitedCount, context.accessed.Count);
         }
 
-        [Test, Factory("DataProvider2")]
+        [Test, TestCaseSource("DataProvider2")]
         public void TestChainOfCommandFailsNullContext(List<ICommand<MyContext>> commands, int visitedCount)
         {
             ChainOfCommand<MyContext> c = new ChainOfCommand<MyContext>(commands);
             Assert.AreEqual(IResult.Failed, c.Execute(null));
         }
 
-        [Test, Factory("DataProvider2")]
+        [Test, TestCaseSource("DataProvider2")]
         public void TestChainOfCommandFails(List<ICommand<MyContext>> commands, int visitedCount)
         {
             MyContext context = new MyContext();

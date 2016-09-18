@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Gallio.Framework;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using NUnit.Framework;
 
 namespace AU.Com.BushLife.Spatial.TwoD
 {
 	[TestFixture]
 	public class RectangleTest
 	{
-		private IEnumerable<object[]> ContainsTestData
+		private static IEnumerable<object[]> ContainsTestData
 		{
 			get
 			{
@@ -188,7 +186,7 @@ namespace AU.Com.BushLife.Spatial.TwoD
 		}
 
 		[Test]
-		[Factory("ContainsTestData")]
+		[TestCaseSource("ContainsTestData")]
 		public void RectangleContainsPointsTest(Rectangle<Int32> box, Point2D<Int32> point, bool expectedResult)
 		{
 			Assert.AreEqual(expectedResult, box.Contains(point));

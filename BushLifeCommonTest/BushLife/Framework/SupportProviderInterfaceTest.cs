@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Gallio.Framework;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
 using TypeMock.ArrangeActAssert;
 using AU.Com.BushLife.Utils;
 using System.Net.Mime;
@@ -12,6 +9,7 @@ using System.Net.Mail;
 using System.Collections.ObjectModel;
 using AU.Com.BushLife.Aspects;
 using log4net;
+using NUnit.Framework;
 
 namespace AU.Com.BushLife.Framework
 {
@@ -21,7 +19,7 @@ namespace AU.Com.BushLife.Framework
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(SupportProviderInterfaceTest));
 
-        private IEnumerable<object[]> LogSupportRequestFileSelectionTestData
+        private static IEnumerable<object[]> LogSupportRequestFileSelectionTestData
         {
             get
             {
@@ -49,7 +47,7 @@ namespace AU.Com.BushLife.Framework
 
         [Test]
         [Isolated]
-        [Factory("LogSupportRequestFileSelectionTestData")]
+        [TestCaseSource("LogSupportRequestFileSelectionTestData")]
         public void LogSupportRequestFileSelectionTest(string supportEmailAddress,
             string logfileAppenderName,
             string stepsToReproduce, 

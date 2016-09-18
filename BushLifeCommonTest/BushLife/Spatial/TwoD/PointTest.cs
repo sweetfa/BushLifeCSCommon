@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Gallio.Framework;
-using MbUnit.Framework.ContractVerifiers;
 
 namespace AU.Com.BushLife.Spatial.TwoD
 {
     using MbUnit.Framework;
+    using NUnit.Framework;
 
     [TestFixture]
     public class PointTest
@@ -37,7 +36,7 @@ namespace AU.Com.BushLife.Spatial.TwoD
             Assert.AreEqual(true, point4.Equals(point4));
         }
 
-        private IEnumerable<object[]> TestDataProvider
+        private static IEnumerable<object[]> TestDataProvider
         {
             get
             {
@@ -48,7 +47,7 @@ namespace AU.Com.BushLife.Spatial.TwoD
             }
         }
 
-        [Test, Factory("TestDataProvider")]
+        [Test, TestCaseSource("TestDataProvider")]
         public void TestDistanceTo(Point2D<Int32> point1, Point2D<Int32> point2, Int32 result)
         {
             Assert.AreEqual(result, point1.DistanceTo(point2));
@@ -63,7 +62,7 @@ namespace AU.Com.BushLife.Spatial.TwoD
 			public Point2D<Int32> ExpectedPoint { get; set; }
 		}
 
-		private IEnumerable<RotateTestData> RotationTestProvider
+		private static IEnumerable<RotateTestData> RotationTestProvider
 		{
 			get
 			{
@@ -161,13 +160,13 @@ namespace AU.Com.BushLife.Spatial.TwoD
 			}
 		}
 
-		[Test, Factory("RotationTestProvider")]
+		[Test, TestCaseSource("RotationTestProvider")]
 		public void TestRotate(RotateTestData data)
 		{
 			Assert.AreEqual(data.ExpectedPoint, data.OriginalPoint.Rotate(data.PivotPoint, data.RotationDegrees));
 		}
 
-		private IEnumerable<object[]> LocatePointAtDistanceTestProvider
+		private static IEnumerable<object[]> LocatePointAtDistanceTestProvider
 		{
 			get
 			{
@@ -191,7 +190,7 @@ namespace AU.Com.BushLife.Spatial.TwoD
 			}
 		}
 
-		[Test, Factory("LocatePointAtDistanceTestProvider")]
+		[Test, TestCaseSource("LocatePointAtDistanceTestProvider")]
 		public void LocatePointAtDistanceTest(Point2D<Int32> originalPoint, double angle, int distance, Point2D<Int32> expectedPoint)
 		{
 			Assert.AreEqual(expectedPoint, originalPoint.LocatePointAtDistance(angle, distance));

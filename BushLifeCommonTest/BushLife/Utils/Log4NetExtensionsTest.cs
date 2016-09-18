@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Gallio.Framework;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
 using AU.Com.BushLife.Aspects;
 using System.IO;
 using log4net;
+using NUnit.Framework;
 
 namespace AU.Com.BushLife.Utils
 {
@@ -17,7 +15,7 @@ namespace AU.Com.BushLife.Utils
         private static readonly ILog Log = LogManager.GetLogger(typeof(Log4NetExtensionsTest));
 
         #region GetLogFilePathTest
-        private IEnumerable<object[]> GetLogFilePathTestData
+        private static IEnumerable<object[]> GetLogFilePathTestData
         {
             get
             {
@@ -30,7 +28,7 @@ namespace AU.Com.BushLife.Utils
         }
 
         [Test]
-        [Factory("GetLogFilePathTestData")]
+        [TestCaseSource("GetLogFilePathTestData")]
         public void GetLogFilePathTest(string logfileAppenderName, string expectedName)
         {
             Assert.AreEqual(expectedName, Path.GetFileName(Log4NetExtensions.GetLogFilePath(logfileAppenderName)));
@@ -38,7 +36,7 @@ namespace AU.Com.BushLife.Utils
         #endregion
         
         #region GetLogFilesTest
-        private IEnumerable<object[]> GetLogFilesTestData
+        private static IEnumerable<object[]> GetLogFilesTestData
         {
             get
             {
@@ -73,12 +71,12 @@ namespace AU.Com.BushLife.Utils
             }
         }
 
-        private void BasicSetup()
+        private static void BasicSetup()
         {
             Log.Info("Trigger creation of initial log file");
         }
 
-        private void RolloverSetup()
+        private static void RolloverSetup()
         {
             for (int i = 0; i < 8000; i++)
                 Log.InfoFormat("Filling up the log file with a number of messages {0}", i);
@@ -96,7 +94,7 @@ namespace AU.Com.BushLife.Utils
         }
 
         [Test]
-        [Factory("GetLogFilesTestData")]
+        [TestCaseSource("GetLogFilesTestData")]
         public void GetLogFilesTest(Action initAction, string logfileAppenderName, bool allfiles, int expectedCount)
         {
             initAction();

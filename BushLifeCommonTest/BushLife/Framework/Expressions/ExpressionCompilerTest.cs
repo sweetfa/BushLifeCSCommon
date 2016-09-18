@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Gallio.Framework;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
 
 using AU.Com.BushLife.Utils;
+using NUnit.Framework;
 
 namespace AU.Com.BushLife.Framework.Expressions
 {
 	[TestFixture]
 	public class ExpressionCompilerTest
 	{
-		private IEnumerable<object[]> DataProvider
+		private static IEnumerable<object[]> DataProvider
 		{
 			get
 			{
@@ -29,7 +27,7 @@ namespace AU.Com.BushLife.Framework.Expressions
 		}
 
 		[Test]
-		[Factory("DataProvider")]
+		[TestCaseSource("DataProvider")]
 		public void ExpressionCompilerCompilationTest<Tin,Tout>(string expression, Tin funcArgument, Tout expected)
 		{
 			ExpressionCompiler<Func<Tin, Tout>> compiler = new ExpressionCompiler<Func<Tin, Tout>>();

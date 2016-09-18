@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Gallio.Framework;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using NUnit.Framework;
 
 namespace AU.Com.BushLife.Spatial.TwoD
 {
 	[TestFixture]
 	public class LineTest
 	{
-		private IEnumerable<object[]> ParallelTestDataProvider
+		private static IEnumerable<object[]> ParallelTestDataProvider
 		{
 			get
 			{
@@ -27,14 +25,14 @@ namespace AU.Com.BushLife.Spatial.TwoD
 			}
 		}
 
-		[Test, Factory("ParallelTestDataProvider")]
+		[Test, TestCaseSource("ParallelTestDataProvider")]
 		public void ParallelTest(Line2D<Int32> lhs, Line2D<Int32> rhs, bool result)
 		{
 			Assert.AreEqual(result, lhs.Parallel(rhs));
 		}
 
 
-		private IEnumerable<object[]> IntersectingTestDataProvider
+		private static IEnumerable<object[]> IntersectingTestDataProvider
 		{
 			get
 			{
@@ -54,7 +52,7 @@ namespace AU.Com.BushLife.Spatial.TwoD
 			}
 		}
 
-		[Test, Factory("IntersectingTestDataProvider")]
+		[Test, TestCaseSource("IntersectingTestDataProvider")]
 		public void IntersectingTest(Line2D<Int32> lhs, Line2D<Int32> rhs, bool result)
 		{
 			Assert.AreEqual(result, lhs.Intersects(rhs));
@@ -62,7 +60,7 @@ namespace AU.Com.BushLife.Spatial.TwoD
 
 		#region Intersection Test
 
-		private IEnumerable<object[]> IntersectionTestDataProvider
+		private static IEnumerable<object[]> IntersectionTestDataProvider
 		{
 			get
 			{
@@ -86,7 +84,7 @@ namespace AU.Com.BushLife.Spatial.TwoD
 			}
 		}
 
-		[Test, Factory("IntersectionTestDataProvider")]
+		[Test, TestCaseSource("IntersectionTestDataProvider")]
 		public void IntersectionTest(Line2D<Int32> lhs, Line2D<Int32> rhs, Locus<Int32> expected)
 		{
 			Assert.AreEqual(expected, lhs.Intersection(rhs));
@@ -94,7 +92,7 @@ namespace AU.Com.BushLife.Spatial.TwoD
 		#endregion
 
 
-		private IEnumerable<object[]> CoincidentTestDataProvider
+		private static IEnumerable<object[]> CoincidentTestDataProvider
 		{
 			get
 			{
@@ -114,13 +112,13 @@ namespace AU.Com.BushLife.Spatial.TwoD
 			}
 		}
 
-		[Test, Factory("CoincidentTestDataProvider")]
+		[Test, TestCaseSource("CoincidentTestDataProvider")]
 		public void CoincidentTest(Line2D<Int32> lhs, Line2D<Int32> rhs, bool result)
 		{
 			Assert.AreEqual(result, lhs.Coincident(rhs));
 		}
 
-		private IEnumerable<object[]> OverlapTestDataProvider
+		private static IEnumerable<object[]> OverlapTestDataProvider
 		{
 			get
 			{
@@ -141,13 +139,13 @@ namespace AU.Com.BushLife.Spatial.TwoD
 			}
 		}
 
-		[Test, Factory("OverlapTestDataProvider")]
+		[Test, TestCaseSource("OverlapTestDataProvider")]
 		public void OverlapTest(Line2D<Int32> lhs, Line2D<Int32> rhs, Locus<Int32> result)
 		{
 			Assert.AreEqual(result, lhs.Overlaps(rhs));
 		}
 
-		private IEnumerable<object[]> EqualsTestDataProvider
+		private static IEnumerable<object[]> EqualsTestDataProvider
 		{
 			get
 			{
@@ -162,7 +160,7 @@ namespace AU.Com.BushLife.Spatial.TwoD
 			}
 		}
 
-		[Test, Factory("EqualsTestDataProvider")]
+		[Test, TestCaseSource("EqualsTestDataProvider")]
 		public void EqualsTest(Line2D<Int32> lhs, Line2D<Int32> rhs, bool result)
 		{
 			Assert.AreEqual(result, lhs.Equals(rhs));
@@ -182,7 +180,7 @@ namespace AU.Com.BushLife.Spatial.TwoD
 		}
 
 		#region Line Extension test
-		private IEnumerable<object[]> LineExtensionDataProvider
+		private static IEnumerable<object[]> LineExtensionDataProvider
 		{
 			get
 			{
@@ -204,14 +202,14 @@ namespace AU.Com.BushLife.Spatial.TwoD
 			}
 		}
 
-		[Test, Factory("LineExtensionDataProvider")]
+		[Test, TestCaseSource("LineExtensionDataProvider")]
 		public void ExtendLineTest(Line2D<Int32> originalLine, Int32 extension1, Int32 extension2, Line2D<Int32> expectedLine)
 		{
 			Assert.AreEqual(expectedLine, originalLine.Extend( extension1, extension2));
 		}
 		#endregion
 
-		private IEnumerable<object[]> IsPerpendicularDataProvider
+		private static IEnumerable<object[]> IsPerpendicularDataProvider
 		{
 			get
 			{
@@ -221,7 +219,7 @@ namespace AU.Com.BushLife.Spatial.TwoD
 		}
 
 
-		[Test,Factory("IsPerpendicularDataProvider")]
+		[Test, TestCaseSource("IsPerpendicularDataProvider")]
 		public void IsPerpendicularTest(Line2D<Int32> line1, Line2D<Int32> line2, bool expectedResult)
 		{
 			Assert.AreEqual(expectedResult, line1.IsPerpendicular(line2));
@@ -229,7 +227,7 @@ namespace AU.Com.BushLife.Spatial.TwoD
 		}
 
 		#region AngleTo Test
-		private IEnumerable<object[]> ToAngleDataProvider
+		private static IEnumerable<object[]> ToAngleDataProvider
 		{
 			get
 			{
@@ -243,7 +241,7 @@ namespace AU.Com.BushLife.Spatial.TwoD
 			}
 		}
 
-		[Test,Factory("ToAngleDataProvider")]
+		[Test, TestCaseSource("ToAngleDataProvider")]
 		public void AngleToTest(Line2D<Int32> line1, Line2D<Int32> line2, double expectedAngle)
 		{
 			Assert.AreEqual(expectedAngle, line1.AngleTo(line2));

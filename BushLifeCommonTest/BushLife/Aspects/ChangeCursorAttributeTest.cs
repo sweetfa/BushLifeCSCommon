@@ -1,16 +1,14 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using Gallio.Framework;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
 
 using TypeMock.ArrangeActAssert;
 
 namespace AU.Com.BushLife.Aspects
 {
-	[TestFixture]
+    [TestFixture]
 	[Isolated]
 	public class ChangeCursorAttributeTest
 	{

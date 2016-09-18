@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using System.Diagnostics;
-using Gallio.Framework;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using NUnit.Framework;
 
 namespace AU.Com.BushLife.Utils
 {
-    [TestFixture]
     public class LanguateUtilsTest
     {
         [DebuggerDisplay("{Name}:{QuantityRequired}")]
@@ -31,7 +28,7 @@ namespace AU.Com.BushLife.Utils
             }
         }
 
-        private IEnumerable<object[]> PartitionFunctionData
+        private static IEnumerable<object[]> PartitionFunctionData
         {
             get
             {
@@ -170,7 +167,7 @@ namespace AU.Com.BushLife.Utils
         }
 
         [Test]
-        [Factory("PartitionFunctionData")]
+        [TestCaseSource("PartitionFunctionData")]
         public void ParitionFunctionTest(IEnumerable<Item> parts,
             IEnumerable<IEnumerable<Item>> expectedResults)
         {
@@ -188,7 +185,7 @@ namespace AU.Com.BushLife.Utils
                     i.QuantityRequired -= c;
                     return child;
                 }).ToList();
-            Assert.AreElementsEqual(expectedResults, result);
+            CollectionAssert.AreEqual(expectedResults, result);
         }
     }
 }

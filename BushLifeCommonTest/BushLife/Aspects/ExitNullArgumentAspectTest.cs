@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Gallio.Framework;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
-
 using PostSharp.Aspects;
 using AU.Com.BushLife.Aspects;
+using NUnit.Framework;
 
 namespace BushLifeCommonTest.BushLife.Aspects
 {
@@ -57,18 +54,28 @@ namespace BushLifeCommonTest.BushLife.Aspects
 			testClass1.MyPropertyTestClass.MyOtherString = "Hello";
 		}
 
-		[Test, ExpectedArgumentNullException]
-		[ExitNullArgumentCheckAspect(PropertyName = "testClass1")]
+        [Test]
 		public void ExitNullArgumentNullTest()
 		{
-			testClass1 = null;
+			Assert.Throws<ArgumentNullException>(() => ExitNullMethod1());
 		}
 
-		[Test, ExpectedArgumentNullException]
-		[ExitNullArgumentCheckAspect(PropertyName = "testClass1.MyPropertyTestClass")]
+        [ExitNullArgumentCheckAspect(PropertyName = "testClass1")]
+        private void ExitNullMethod1()
+        {
+            testClass1 = null;
+        }
+
+		[Test]
 		public void ExitNullArgumentNullLevel2Test()
 		{
-			testClass1 = new MyTestClass();
+			Assert.Throws<ArgumentNullException>(() => ExitNullMethod2());
 		}
+
+        [ExitNullArgumentCheckAspect(PropertyName = "testClass1.MyPropertyTestClass")]
+        private void ExitNullMethod2()
+        {
+            testClass1 = new MyTestClass();
+        }
 	}
 }

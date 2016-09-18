@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Gallio.Framework;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
+using NUnit.Framework;
 
 namespace AU.Com.BushLife.Utils
 {
@@ -27,7 +25,7 @@ namespace AU.Com.BushLife.Utils
 
 			IList<MyEnum> result = EnumUtils.Convert<MyEnum, Int32>(testValues);
 
-			Assert.AreElementsEqual(resultValues, result);
+			CollectionAssert.AreEqual(resultValues, result);
 		}
 	}
 }

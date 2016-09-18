@@ -3,11 +3,9 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using Gallio.Framework;
-using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
 
 using AU.Com.BushLife.Utils;
+using NUnit.Framework;
 
 namespace AU.Com.BushLife.Utils
 {
@@ -17,7 +15,7 @@ namespace AU.Com.BushLife.Utils
 	[TestFixture]
 	public class StreamUtilsTest
 	{
-		private IEnumerable<object[]> DataProviderByte
+		private static IEnumerable<object[]> DataProviderByte
 		{
 			get
 			{
@@ -48,7 +46,7 @@ namespace AU.Com.BushLife.Utils
 			}
 		}
 
-		private IEnumerable<object[]> DataProviderShort
+		private static IEnumerable<object[]> DataProviderShort
 		{
 			get
 			{
@@ -94,9 +92,10 @@ namespace AU.Com.BushLife.Utils
 			}
 		}
 
-		[Test, Factory("DataProviderByte")]
-		public void TestPutByteMemory(Encoding encoding, byte value)
+		[Test, TestCaseSource("DataProviderByte")]
+		public void TestPutByteMemory(Encoding encoding, Int32 intValue)
 		{
+            byte value = (byte)intValue;
 			Stream st = new MemoryStream();
 			StreamUtils.PutByte(st, value);
 			st.Flush();
@@ -104,9 +103,10 @@ namespace AU.Com.BushLife.Utils
 			Assert.AreEqual(value, StreamUtils.GetByte(st));
 		}
 
-		[Test, Factory("DataProviderByte")]
-		public void TestPutByteFile(Encoding encoding, byte value)
+		[Test, TestCaseSource("DataProviderByte")]
+		public void TestPutByteFile(Encoding encoding, Int32 intValue)
 		{
+            byte value = (byte)intValue;
 			string filepath = Path.GetTempFileName();
 			// Cleanup
 			File.Delete(filepath);
@@ -127,11 +127,11 @@ namespace AU.Com.BushLife.Utils
 			File.Delete(filepath);
 		}
 
-		[Test, Factory("DataProviderShort")]
-		public void TestPutShortMemory(Encoding encoding, UInt16 value)
+		[Test, TestCaseSource("DataProviderShort")]
+		public void TestPutShortMemory(Encoding encoding, Int32 value)
 		{
 			Stream st = new MemoryStream();
-			StreamUtils.PutUInt16(st, value);
+			StreamUtils.PutUInt16(st, (UInt16) value);
 			st.Flush();
 			st.Seek(0, SeekOrigin.Begin);
 			Assert.AreEqual(value, (UInt16)StreamUtils.GetInt16(st));
