@@ -1,0 +1,57 @@
+name: Build and Version DLL
+
+on:
+  push:
+    branches: [ "master", "main" ]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [ "master", "main" ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v2
+
+    - name: Restore NuGet Packages
+      run: nuget restore BushLifeCommon.sln
+
+    - name: Extract version from tag
+      id: get_version
+      shell: pwsh
+      run: |
+        $version = "1.0.0.${{ github.run_number }}"
+        if ("${{ github.ref }}" -like "refs/tags/v*") {
+          $version = "${{ github.ref_name }}".Substring(1)
+        }
+        echo "VERSION=$version" >> $env:GITHUB_ENV
+        echo "version=$version" >> $env:GITHUB_OUTPUT
+
+    - name: Update AssemblyInfo
+      shell: pwsh
+      run: |
+        $path = "BushLifeCommon/Properties/AssemblyInfo.cs"
+        $version = "${{ env.VERSION }}"
+        (Get-Content $path) -replace '\[assembly: AssemblyVersion\(".*"\)\]', "[assembly: AssemblyVersion(""$version"")]" | 
+        Set-Content $path
+        (Get-Content $path) -replace '\[assembly: AssemblyFileVersion\(".*"\)\]', "[assembly: AssemblyFileVersion(""$version"")]" | 
+        Set-Content $path
+
+    - name: Build Solution
+      run: msbuild BushLifeCommon.sln /p:Configuration=Release /p:Platform="Any CPU"
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: BushLifeCommon-${{ env.VERSION }}
+        path: BushLifeCommon/bin/Release/BushLifeCommon.dll
