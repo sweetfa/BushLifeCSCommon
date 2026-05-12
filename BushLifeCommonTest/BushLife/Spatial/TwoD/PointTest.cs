@@ -4,7 +4,6 @@ using System.Text;
 
 namespace AU.Com.BushLife.Spatial.TwoD
 {
-    using MbUnit.Framework;
     using NUnit.Framework;
 
     [TestFixture]

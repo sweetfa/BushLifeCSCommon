@@ -1,17 +1,6 @@
-﻿/**
- * Copyright (C) 2012 Bush Life Pty Limited
- * 
- * All rights reserved.  No unauthorised copying or redistribution without the prior written 
- * consent of the management of Bush Life Pty Limited.
- * 
- * www.bushlife.com.au
- * sales@bushlife.com.au
- * 
- * PO Box 865, Redcliffe, QLD, 4020, Australia
- * 
- * 
- * @(#) NodeTravellingSalesmanStep.cs
- */
+// <copyright file="NodeTravellingSalesmanStep.cs" company="Bush Life Pty Limited">
+// Copyright (c) 2012 Bush Life Pty Limited. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
@@ -28,6 +17,7 @@ namespace AU.Com.BushLife.AntColony
 	/// algorithm
 	/// </summary>
 	[DebuggerDisplay("Step {StepName}:[{Edges.Count}]")]
+	[Obsolete("Obsolete")]
 	public class NodeTravellingSalesmanStep : IStep
 	{
 		public NodeTravellingSalesmanStep(string name)

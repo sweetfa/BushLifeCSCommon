@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AU.Com</RootNamespace>
     <AssemblyName>BushLifeCommon</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <DontImportPostSharp>True</DontImportPostSharp>
   </PropertyGroup>
@@ -181,6 +181,7 @@
     </None>
     <None Include="BushLifeCommon.snk" />
     <None Include="packages.config" />
+    <None Include="postsharp.config" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

@@ -1,17 +1,6 @@
-﻿/**
- * Copyright (C) 2012 Bush Life Pty Limited
- * 
- * All rights reserved.  No unauthorised copying or redistribution without the prior written 
- * consent of the management of Bush Life Pty Limited.
- * 
- * www.bushlife.com.au
- * sales@bushlife.com.au
- * 
- * PO Box 865, Redcliffe, QLD, 4020, Australia
- * 
- * 
- * @(#) Log4NetLoggerAspect.cs
- */
+// <copyright file="Log4NetLoggerAspect.cs" company="Bush Life Pty Limited">
+// Copyright (c) 2012 Bush Life Pty Limited. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
@@ -199,9 +188,11 @@ namespace AU.Com.BushLife.Aspects
                     }
                 }
                 if (args.ReturnValue != null)
+				{
 				    Logger.DebugFormat("Returning {0}: {1}", 
                         args.ReturnValue.GetType().Name, 
                         args.ReturnValue.ToString());
+				}
 			}
 		}
 

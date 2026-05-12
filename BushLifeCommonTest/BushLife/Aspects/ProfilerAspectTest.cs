@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AU.Com.BushLife.Aspects
 {
 	[TestFixture]
-    [DeploymentItem("log4net.Config")]
     public class ProfilerAspectTest
 	{
         [Log4NetLoggerAspect(ConfigFileName = "log4net.config", LogFileName = "MyFirstLogFile.log")]

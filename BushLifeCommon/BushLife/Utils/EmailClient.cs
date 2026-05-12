@@ -1,17 +1,6 @@
-﻿/**
- * Copyright (C) 2014 Bush Life Pty Limited
- * 
- * All rights reserved.  No unauthorised copying or redistribution without the prior written 
- * consent of the management of Bush Life Pty Limited.
- * 
- * www.bushlife.com.au
- * sales@bushlife.com.au
- * 
- * PO Box 865, Redcliffe, QLD, 4020, Australia
- * 
- * 
- * @(#) EmailClient.cs
- */
+﻿// <copyright file="EmailClient.cs" company="Bush Life Pty Limited">
+// Copyright (c) 2014 Bush Life Pty Limited. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
@@ -21,6 +10,7 @@ using System.Net.Mime;
 using System.Text;
 using System.IO;
 using System.IO.Compression;
+using log4net;
 
 using AU.Com.BushLife.Utils;
 

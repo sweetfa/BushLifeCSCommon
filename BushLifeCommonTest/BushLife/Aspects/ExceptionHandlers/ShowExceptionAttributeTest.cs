@@ -11,7 +11,6 @@ using log4net;
 using AU.Com.BushLife.Utils;
 using AU.Com.BushLife.Exceptions;
 using NUnit.Framework;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 {
@@ -117,7 +116,6 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 
 		[Test]
 		[Isolated]
-        [ExpectedException(typeof(ArgumentException))]
         public void ShowExceptionTestSpecificException4()
 		{
 			#region Set up test data
@@ -132,14 +130,17 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 			#endregion
 
 			#region Execute test
-			try
-			{
-				TestClass cut = new TestClass();
-				cut.MyMethod4();
-			}
-			catch (ArgumentNullException)
-			{
-			}
+            Assert.Throws<ArgumentException>(() =>
+            {
+                try
+                {
+                    TestClass cut = new TestClass();
+                    cut.MyMethod4();
+                }
+                catch (ArgumentNullException)
+                {
+                }
+            });
 			#endregion
 
 			#region Verity results
@@ -180,7 +181,6 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 
 		[Test]
 		[Isolated]
-        [ExpectedException(typeof(ArgumentException))]
         public void ShowExceptionTestSpecificException6()
 		{
 			#region Set up test data
@@ -195,14 +195,17 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
 			#endregion
 
 			#region Execute test
-			try
-			{
-				TestClass cut = new TestClass();
-				cut.MyMethod8();
-			}
-			catch (AlreadyHandledException)
-			{
-			}
+            Assert.Throws<ArgumentException>(() =>
+            {
+                try
+                {
+                    TestClass cut = new TestClass();
+                    cut.MyMethod8();
+                }
+                catch (AlreadyHandledException)
+                {
+                }
+            });
 			#endregion
 
 			#region Verity results

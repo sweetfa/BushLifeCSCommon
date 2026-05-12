@@ -3,12 +3,11 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace AU.Com.BushLife.Aspects
 {
-	[TestClass]
-    [DeploymentItem("log4net.Config")]
+	[TestFixture]
 	public class Log4NetLoggerAspectTest2
 	{
         private string FilePath { get; set; }
@@ -34,13 +33,13 @@ namespace AU.Com.BushLife.Aspects
             }
         }
 
-        [ClassInitialize]
-        public static void ClassInitialize(TestContext context)
+        [OneTimeSetUp]
+        public static void ClassInitialize()
         {
             Log4NetLoggerAspect.Initialised = false;
         }
 
-        [TestInitialize]
+        [SetUp]
         public void TestInitialize()
         {
             string pathname = "C:\\Temp";
@@ -48,7 +47,7 @@ namespace AU.Com.BushLife.Aspects
             File.Delete(FilePath);
         }
 
-        [TestMethod]
+        [Test]
         public void Log4NetAspectTest2()
         {
             TestClass2 cut = new TestClass2();

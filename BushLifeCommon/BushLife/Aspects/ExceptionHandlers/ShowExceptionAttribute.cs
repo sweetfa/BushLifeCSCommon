@@ -1,17 +1,6 @@
-﻿/**
- * Copyright (C) 2014 Bush Life Pty Limited
- * 
- * All rights reserved.  No unauthorised copying or redistribution without the prior written 
- * consent of the management of Bush Life Pty Limited.
- * 
- * www.bushlife.com.au
- * sales@bushlife.com.au
- * 
- * PO Box 865, Redcliffe, QLD, 4020, Australia
- * 
- * 
- * @(#) ShowExceptionAttribute.cs
- */
+// <copyright file="ShowExceptionAttribute.cs" company="Bush Life Pty Limited">
+// Copyright (c) 2014 Bush Life Pty Limited. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
@@ -100,7 +89,7 @@ namespace AU.Com.BushLife.Aspects.ExceptionHandlers
                     throw new InvalidAnnotationException(string.Format("Message and Formatter property are not defined and one only must be defined: {0}.{1}()", method.ReflectedType.FullName, method.Name));
                 if (Formatter != null)
                 {
-                    if ((Formatter as ExceptionFormatter) != null)
+                    if (!typeof(ExceptionFormatter).IsAssignableFrom(Formatter))
                         throw new InvalidAnnotationException(string.Format("Formatter property must be of type ExceptionFormatter: {0}.{1}()", method.ReflectedType.FullName, method.Name));
                 }
             }
