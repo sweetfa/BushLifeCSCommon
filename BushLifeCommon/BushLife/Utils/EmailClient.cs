@@ -36,6 +36,8 @@ namespace AU.Com.BushLife.Utils
     /// </summary>
     public class EmailClient : IDisposable
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(EmailClient));
+
         /// <summary>
         /// Adobe Portable Document Format (Adobe PDF)
         /// </summary>
@@ -54,16 +56,8 @@ namespace AU.Com.BushLife.Utils
         /// <summary>
         /// The client to use to send the email
         /// </summary>
-        private SmtpClient Client
-        {
-            get
-            {
-                if (m_Client == null)
-                    m_Client = new SmtpClient();
-                return m_Client;
-            }
-        }
-        private SmtpClient m_Client = null;
+        private SmtpClient Client => _mClient ?? (_mClient = new SmtpClient());
+        private SmtpClient _mClient = null;
 
         /// <summary>
         /// The address that all emails from this client are sent from
@@ -78,6 +72,11 @@ namespace AU.Com.BushLife.Utils
         /// <returns>true if the email was sent</returns>
         public bool SendEmail(MailMessage message, params MailAddress[] toAddresses)
         {
+            if (Log.IsDebugEnabled)
+            {
+                Log.DebugFormat("Sending email: Subject={0}, From={1}, To={2}", 
+                    message.Subject, FromAddress, string.Join(",", toAddresses.Select(a => a.Address)));
+            }
             message.To.AddRange(toAddresses);
             message.From = FromAddress;
             Client.Send(message);
@@ -92,6 +91,10 @@ namespace AU.Com.BushLife.Utils
         /// <returns>The created mail message</returns>
         public MailMessage CreateMessage(string subject, string messageBody)
         {
+            if (Log.IsDebugEnabled)
+            {
+                Log.DebugFormat("Creating message: Subject={0}", subject);
+            }
             MailMessage message = new MailMessage();
             message.Subject = subject;
             message.Body = messageBody;
@@ -108,6 +111,10 @@ namespace AU.Com.BushLife.Utils
         /// <returns>The created mail message</returns>
         public MailMessage CreateMessage(string subject, string messageBody, params Attachment[] attachments)
         {
+            if (Log.IsDebugEnabled)
+            {
+                Log.DebugFormat("Creating message with {0} attachments: Subject={1}", attachments.Length, subject);
+            }
             MailMessage message = new MailMessage();
             message.Subject = subject;
             message.Body = messageBody;
@@ -124,6 +131,10 @@ namespace AU.Com.BushLife.Utils
         /// <returns>A formatted attachment</returns>
         public Attachment CreateAttachment(Stream stream, string attachmentName, ContentType mimeType)
         {
+            if (Log.IsDebugEnabled)
+            {
+                Log.DebugFormat("Creating attachment: Name={0}, MimeType={1}", attachmentName, mimeType);
+            }
             Attachment attachment = new Attachment(stream, attachmentName, mimeType.ToString());
             return attachment;
         }
@@ -137,6 +148,10 @@ namespace AU.Com.BushLife.Utils
         /// <returns>A formatted attachment</returns>
         public Attachment CreateGzipAttachment(Stream stream, string attachmentName, ContentType mimeType)
         {
+            if (Log.IsDebugEnabled)
+            {
+                Log.DebugFormat("Creating Gzip attachment: Name={0}, MimeType={1}", attachmentName, mimeType);
+            }
             using (var outStream = new MemoryStream())
             {
                 using (var compress = new GZipStream(outStream, CompressionMode.Compress))
@@ -155,9 +170,13 @@ namespace AU.Com.BushLife.Utils
         /// </summary>
         public void Dispose()
         {
-            if (m_Client != null)
-                m_Client.Dispose();
-            m_Client = null;
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug("Disposing EmailClient");
+            }
+            if (_mClient != null)
+                _mClient.Dispose();
+            _mClient = null;
         }
     }
 }
